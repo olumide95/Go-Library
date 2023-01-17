@@ -10,7 +10,10 @@ type LoginRequest struct {
 }
 
 type LoginResponse struct {
-	SignupResponse
+	ID    uint   `json:"id"`
+	Name  string `json:"name"`
+	Email string `json:"email"`
+	Role  string `json:"role"`
 }
 
 type SignupRequest struct {
