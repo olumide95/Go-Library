@@ -7,6 +7,7 @@ import (
 	"github.com/olumide95/go-library/api/util"
 	"github.com/olumide95/go-library/domain"
 	"github.com/olumide95/go-library/models"
+	csrf "github.com/utrack/gin-csrf"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -75,12 +76,14 @@ func (ac *AuthController) Login(c *gin.Context) {
 	user, err := ac.AuthUsecase.GetUserByEmail(request.Email)
 
 	if err != nil {
-		c.JSON(http.StatusNotFound, util.ErrorResponse{Message: "User not found with the given email"})
+		c.Redirect(http.StatusSeeOther, "/login")
+		util.FlashMessage(c, "User not found with the given email.")
 		return
 	}
 
 	if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(request.Password)) != nil {
-		c.JSON(http.StatusUnauthorized, util.ErrorResponse{Message: "Invalid credentials"})
+		c.Redirect(http.StatusSeeOther, "/login")
+		util.FlashMessage(c, "Invalid credentials.")
 		return
 	}
 
@@ -92,4 +95,8 @@ func (ac *AuthController) Login(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"user": loginResponse})
+}
+
+func (ac *AuthController) LoginView(c *gin.Context) {
+	c.HTML(http.StatusOK, "signin.tmpl", gin.H{"messages": util.Flashes(c), "csrf": csrf.GetToken(c)})
 }
