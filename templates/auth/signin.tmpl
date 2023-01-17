@@ -1,0 +1,28 @@
+{{ template "auth_header" .}}
+
+ <main class="form-signin">
+ {{ if .messages }}
+  {{ range .messages }}
+  <div class="flash-message text-red" role="alert">
+    {{ . }}
+  </div>
+  {{ end }}
+  {{ end }}
+<br/>
+ <form action="/login" method="POST">
+<span class="text-red"> {{ .error }} </span> 
+   <input type="hidden" name="_csrf" value="{{ .csrf }}" />
+    <div class="form-floating">
+      <input type="email" name="email" class="form-control" id="floatingInput" />
+      <label for="floatingInput">Email address</label>
+    </div>
+    <div class="form-floating">
+      <input type="password" name="password" class="form-control" id="floatingPassword"/>
+      <label for="floatingPassword">Password</label>
+    </div>
+    <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+    <span>New user? <a href="signup"> Signup </a></span>
+  </form>
+  </main>
+
+{{ template "auth_footer" .}}
