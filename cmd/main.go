@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/joho/godotenv"
+	"github.com/olumide95/go-library/api/routes"
 	"github.com/olumide95/go-library/bootstrap"
 )
 
@@ -15,6 +16,8 @@ func main() {
 	}
 
 	db := &bootstrap.Database{}
-	db.InitDb()
+	db = db.InitDb()
+
+	routes.Setup(db)
 
 }

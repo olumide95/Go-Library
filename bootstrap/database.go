@@ -13,7 +13,7 @@ type Database struct {
 	DB *gorm.DB
 }
 
-func (d *Database) InitDb() *Database {
+func (d *Database) InitDb() {
 	dsn := os.Getenv("DB_DSN")
 	db, err := gorm.Open(postgres.Open(dsn))
 
@@ -24,6 +24,4 @@ func (d *Database) InitDb() *Database {
 	db.AutoMigrate(&models.User{}, &models.Book{}, &models.BookLog{})
 
 	d.DB = db
-
-	return d
 }
