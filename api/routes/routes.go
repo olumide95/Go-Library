@@ -1,14 +1,37 @@
 package routes
 
 import (
+	"os"
+
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
+	"github.com/olumide95/go-library/api/middleware"
 	"gorm.io/gorm"
 )
 
 func Setup(DB *gorm.DB) {
-	r := gin.Default()
+	router := gin.Default()
+	secrete := os.Getenv("SESSION_SECRETE")
 
-	AuthRouter(r, DB)
+	router.Static("/assets", "./assets")
+	router.LoadHTMLGlob("templates/*.tmpl")
 
-	r.Run()
+	router.Use(sessions.Sessions("session", cookie.NewStore([]byte(secrete))))
+
+	PublicRoutes(router.Group("/"), DB)
+
+	private := router.Group("/")
+	private.Use(middleware.AuthRequired)
+	PrivateRoutes(private, DB)
+
+	router.Run()
+}
+
+func PublicRoutes(router *gin.RouterGroup, DB *gorm.DB) {
+	AuthRouter(router, DB)
+}
+
+func PrivateRoutes(router *gin.RouterGroup, DB *gorm.DB) {
+
 }

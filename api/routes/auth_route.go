@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func AuthRouter(r *gin.Engine, DB *gorm.DB) {
+func AuthRouter(r *gin.RouterGroup, DB *gorm.DB) {
 	ur := repository.NewUserRepository(DB)
 	sc := controller.AuthController{
 		AuthUsecase: usecase.NewauthUsecase(ur),
