@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/olumide95/go-library/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -19,6 +20,8 @@ func (d *Database) InitDb() *Database {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	db.AutoMigrate(&models.User{}, &models.Book{}, &models.BookLog{})
 
 	d.DB = db
 
