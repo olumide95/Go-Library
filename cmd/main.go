@@ -16,8 +16,7 @@ func main() {
 	}
 
 	db := &bootstrap.Database{}
-	db = db.InitDb()
+	db.InitDb()
 
-	routes.Setup(db)
-
+	routes.Setup(db.DB)
 }
