@@ -15,4 +15,5 @@ func AuthRouter(r *gin.RouterGroup, DB *gorm.DB) {
 	}
 	r.POST("/signup", sc.Signup)
 	r.POST("/login", sc.Login)
+	r.GET("/login", sc.LoginView)
 }
