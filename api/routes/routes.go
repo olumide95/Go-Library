@@ -7,17 +7,25 @@ import (
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 	"github.com/olumide95/go-library/api/middleware"
+	csrf "github.com/utrack/gin-csrf"
 	"gorm.io/gorm"
 )
 
 func Setup(DB *gorm.DB) {
 	router := gin.Default()
-	secrete := os.Getenv("SESSION_SECRETE")
+	secret := os.Getenv("SESSION_SECRET")
 
 	router.Static("/assets", "./assets")
-	router.LoadHTMLGlob("templates/*.tmpl")
+	router.LoadHTMLGlob("templates/**/*.tmpl")
 
-	router.Use(sessions.Sessions("session", cookie.NewStore([]byte(secrete))))
+	router.Use(sessions.Sessions("session", cookie.NewStore([]byte(secret))))
+	router.Use(csrf.Middleware(csrf.Options{
+		Secret: os.Getenv("CSRF_SECRET"),
+		ErrorFunc: func(c *gin.Context) {
+			c.String(400, "CSRF token mismatch")
+			c.Abort()
+		},
+	}))
 
 	PublicRoutes(router.Group("/"), DB)
 
@@ -33,5 +41,5 @@ func PublicRoutes(router *gin.RouterGroup, DB *gorm.DB) {
 }
 
 func PrivateRoutes(router *gin.RouterGroup, DB *gorm.DB) {
-
+	DashboardRouter(router, DB)
 }
