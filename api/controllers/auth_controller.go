@@ -14,7 +14,7 @@ type AuthController struct {
 	AuthUsecase domain.AuthUsecase
 }
 
-func (sc *AuthController) Signup(c *gin.Context) {
+func (ac *AuthController) Signup(c *gin.Context) {
 	var request *domain.SignupRequest
 
 	err := c.ShouldBind(&request)
@@ -23,7 +23,7 @@ func (sc *AuthController) Signup(c *gin.Context) {
 		return
 	}
 
-	_, err = sc.AuthUsecase.GetUserByEmail(request.Email)
+	_, err = ac.AuthUsecase.GetUserByEmail(request.Email)
 	if err == nil {
 		c.JSON(http.StatusConflict, util.ErrorResponse{Message: "User already exists with the given email"})
 		return
@@ -47,7 +47,7 @@ func (sc *AuthController) Signup(c *gin.Context) {
 		Password: request.Password,
 	}
 
-	err = sc.AuthUsecase.CreateUser(&user)
+	err = ac.AuthUsecase.CreateUser(&user)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, util.ErrorResponse{Message: err.Error()})
 		return
@@ -61,4 +61,35 @@ func (sc *AuthController) Signup(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"status": "success", "data": gin.H{"user": userResponse}})
+}
+
+func (ac *AuthController) Login(c *gin.Context) {
+	var request *domain.LoginRequest
+
+	err := c.ShouldBind(&request)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, util.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	user, err := ac.AuthUsecase.GetUserByEmail(request.Email)
+
+	if err != nil {
+		c.JSON(http.StatusNotFound, util.ErrorResponse{Message: "User not found with the given email"})
+		return
+	}
+
+	if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(request.Password)) != nil {
+		c.JSON(http.StatusUnauthorized, util.ErrorResponse{Message: "Invalid credentials"})
+		return
+	}
+
+	loginResponse := &domain.LoginResponse{
+		ID:    user.ID,
+		Name:  user.Name,
+		Email: user.Email,
+		Role:  user.Role,
+	}
+
+	c.JSON(http.StatusOK, gin.H{"user": loginResponse})
 }
