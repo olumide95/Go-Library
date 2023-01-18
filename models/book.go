@@ -10,3 +10,12 @@ type Book struct {
 	CreatedAt time.Time `gorm:"default:current_timestamp"`
 	UpdatedAt time.Time `gorm:"default:current_timestamp"`
 }
+
+type BookRepository interface {
+	Create(book *Book) error
+	Update(id uint, book *Book) error
+	CreateBulk(books *[]Book) error
+	GetByID(id uint) (Book, error)
+	Delete(id []uint) error
+	All() ([]Book, error)
+}
