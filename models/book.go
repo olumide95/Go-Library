@@ -13,7 +13,7 @@ type Book struct {
 
 type BookRepository interface {
 	Create(book *Book) error
-	Update(id uint, book *Book) error
+	Update(id uint, book *Book) (int64, error)
 	CreateBulk(books *[]Book) error
 	GetByID(id uint) (Book, error)
 	Delete(id []uint) error

@@ -23,16 +23,19 @@ func (bu *bookUsecase) Create(book *models.Book) error {
 	return bu.bookRepository.Create(book)
 }
 
-func (bu *bookUsecase) BorrowBook(id uint, book *models.Book) error {
-	return bu.bookRepository.Update(id, book)
+func (bu *bookUsecase) BorrowBook(id uint) (int64, error) {
+	book := models.Book{Quantity: 1}
+	return bu.bookRepository.Update(id, &book)
 }
 
-func (bu *bookUsecase) ReturnBook(id uint, book *models.Book) error {
-	return bu.bookRepository.Update(id, book)
+func (bu *bookUsecase) ReturnBook(id uint) (int64, error) {
+	book := models.Book{Quantity: 1}
+	return bu.bookRepository.Update(id, &book)
 }
 
-func (bu *bookUsecase) UpdateBookQuantity(id uint, book *models.Book) error {
-	return bu.bookRepository.Update(id, book)
+func (bu *bookUsecase) UpdateBookQuantity(id uint, quantity uint16) (int64, error) {
+	book := models.Book{Quantity: quantity}
+	return bu.bookRepository.Update(id, &book)
 }
 
 func (bu *bookUsecase) CreateBulk(books *[]models.Book) error {

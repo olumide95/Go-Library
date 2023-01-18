@@ -27,11 +27,11 @@ func (ur *bookRepository) CreateBulk(book *[]models.Book) error {
 	return result.Error
 }
 
-func (ur *bookRepository) Update(id uint, book *models.Book) error {
+func (ur *bookRepository) Update(id uint, book *models.Book) (int64, error) {
 
 	result := ur.database.Where("id = ?", id).Updates(book)
 
-	return result.Error
+	return result.RowsAffected, result.Error
 }
 
 func (ur *bookRepository) GetByID(id uint) (models.Book, error) {
