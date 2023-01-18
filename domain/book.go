@@ -4,6 +4,12 @@ import (
 	"github.com/olumide95/go-library/models"
 )
 
+type StoreBooksRequest []struct {
+	Title    string `form:"title" binding:"required"`
+	Author   string `form:"author" binding:"required"`
+	Quantity uint16 `form:"quantity" binding:"required"`
+}
+
 type BookUsecase interface {
 	Create(book *models.Book) error
 	UpdateBookQuantity(id uint, book *models.Book) error

@@ -5,6 +5,6 @@ type ErrorResponse struct {
 }
 
 type SuccessResponse struct {
-	Message string `json:"message"`
-	Data    string `json:"data"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
 }
