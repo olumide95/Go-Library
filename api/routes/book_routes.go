@@ -18,7 +18,8 @@ func BookRouter(r *gin.RouterGroup, DB *gorm.DB) {
 
 	r.GET("/books/all", dc.AllBooks)
 	r.POST("/books/store", dc.StoreBooks)
-	r.POST("/books/update", dc.UpdateBook)
-	r.POST("/books/borrow", middleware.DBTransactionMiddleware(DB), dc.BorrowBook)
-	r.POST("/books/return", middleware.DBTransactionMiddleware(DB), dc.ReturnBook)
+	r.PUT("/books/update", dc.UpdateBook)
+	r.DELETE("/books/delete", dc.DeleteBooks)
+	r.PUT("/books/borrow", middleware.DBTransactionMiddleware(DB), dc.BorrowBook)
+	r.PUT("/books/return", middleware.DBTransactionMiddleware(DB), dc.ReturnBook)
 }

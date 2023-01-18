@@ -49,11 +49,11 @@ func (ur *bookRepository) GetByIDForUpdate(id uint) (models.Book, error) {
 	return book, result.Error
 }
 
-func (ur *bookRepository) Delete(id []uint) error {
+func (ur *bookRepository) Delete(id []uint) (int64, error) {
 	var book models.Book
 	result := ur.database.Delete(&book, id)
 
-	return result.Error
+	return result.RowsAffected, result.Error
 }
 
 func (ur *bookRepository) All() ([]models.Book, error) {

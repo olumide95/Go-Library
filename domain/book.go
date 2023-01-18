@@ -19,6 +19,10 @@ type ReturnBookRequest struct {
 	LogID uint `form:"log_id" binding:"required"`
 }
 
+type DeleteBooksRequest []struct {
+	ID uint `form:"id" binding:"required"`
+}
+
 type BookUsecase interface {
 	Create(book *models.Book) error
 	UpdateBookQuantity(id uint, quantity uint16) (int64, error)
@@ -26,6 +30,6 @@ type BookUsecase interface {
 	ReturnBook(id uint, logId uint) (int64, error)
 	CreateBulk(books *[]models.Book) error
 	GetBookByID(id uint) (models.Book, error)
-	Delete(id []uint) error
+	Delete(id []uint) (int64, error)
 	AllBooks() ([]models.Book, error)
 }

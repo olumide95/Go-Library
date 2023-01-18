@@ -54,6 +54,31 @@ func (bc *BookController) UpdateBook(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{})
 }
 
+func (bc *BookController) DeleteBooks(c *gin.Context) {
+	var request *domain.DeleteBooksRequest
+
+	err := c.ShouldBind(&request)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, util.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	var IDs []uint
+	for _, val := range *request {
+		IDs = append(IDs, val.ID)
+	}
+
+	RowsAffected, err := bc.BookUsecase.Delete(IDs)
+
+	if err != nil || RowsAffected == 0 {
+		c.JSON(http.StatusNotFound, util.ErrorResponse{Message: "Error Deleting Books."})
+		return
+	}
+
+	c.JSON(http.StatusOK, util.SuccessResponse{Message: "Book Deleted Successfully!"})
+}
+
 func (bc *BookController) BorrowBook(c *gin.Context) {
 	var request *domain.BorrowBookRequest
 

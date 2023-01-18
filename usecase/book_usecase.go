@@ -77,6 +77,6 @@ func (bu *bookUsecase) GetBookByID(id uint) (models.Book, error) {
 	return bu.bookRepository.GetByID(id)
 }
 
-func (bu *bookUsecase) Delete(id []uint) error {
+func (bu *bookUsecase) Delete(id []uint) (int64, error) {
 	return bu.bookRepository.Delete(id)
 }

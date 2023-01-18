@@ -17,6 +17,6 @@ type BookRepository interface {
 	CreateBulk(books *[]Book) error
 	GetByID(id uint) (Book, error)
 	GetByIDForUpdate(id uint) (Book, error)
-	Delete(id []uint) error
+	Delete(id []uint) (int64, error)
 	All() ([]Book, error)
 }
