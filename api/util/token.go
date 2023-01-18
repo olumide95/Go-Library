@@ -3,12 +3,14 @@ package util
 import (
 	"encoding/base64"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt"
 )
 
-func CreateToken(ttl time.Duration, payload interface{}, privateKey string) (string, error) {
+func CreateToken(payload interface{}) (string, error) {
+	privateKey := os.Getenv("ACCESS_TOKEN_PRIVATE_KEY")
 	decodedPrivateKey, err := base64.StdEncoding.DecodeString(privateKey)
 	if err != nil {
 		return "", fmt.Errorf("could not decode key: %w", err)
@@ -23,7 +25,7 @@ func CreateToken(ttl time.Duration, payload interface{}, privateKey string) (str
 
 	claims := make(jwt.MapClaims)
 	claims["sub"] = payload
-	claims["exp"] = now.Add(ttl).Unix()
+	claims["exp"] = now.Add(time.Hour * 24).Unix()
 	claims["iat"] = now.Unix()
 	claims["nbf"] = now.Unix()
 

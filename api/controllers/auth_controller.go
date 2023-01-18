@@ -7,7 +7,6 @@ import (
 	"github.com/olumide95/go-library/api/util"
 	"github.com/olumide95/go-library/domain"
 	"github.com/olumide95/go-library/models"
-	csrf "github.com/utrack/gin-csrf"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -62,7 +61,13 @@ func (ac *AuthController) Signup(c *gin.Context) {
 		Email: user.Email,
 		Role:  user.Role,
 	}
-	c.JSON(http.StatusOK, gin.H{"status": "success", "data": gin.H{"user": userResponse}})
+
+	access_token, _ := util.CreateToken(userResponse)
+
+	c.SetCookie("access_token", access_token, 86400, "/", "localhost", false, true)
+	c.SetCookie("logged_in", "true", 86400, "/", "localhost", false, false)
+
+	c.JSON(http.StatusOK, gin.H{"user": userResponse, "access_token": access_token})
 }
 
 func (ac *AuthController) Login(c *gin.Context) {
@@ -86,19 +91,38 @@ func (ac *AuthController) Login(c *gin.Context) {
 		return
 	}
 
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": err.Error()})
+		return
+	}
+
 	loginResponse := &domain.LoginResponse{
 		ID:    user.ID,
 		Name:  user.Name,
 		Email: user.Email,
 		Role:  user.Role,
 	}
-	c.JSON(http.StatusOK, gin.H{"user": loginResponse})
+
+	access_token, _ := util.CreateToken(loginResponse)
+
+	c.SetCookie("access_token", access_token, 86400, "/", "localhost", false, true)
+	c.SetCookie("logged_in", "true", 86400, "/", "localhost", false, false)
+
+	c.JSON(http.StatusOK, gin.H{"user": loginResponse, "access_token": access_token})
 }
 
 func (ac *AuthController) LoginView(c *gin.Context) {
-	c.HTML(http.StatusOK, "signin.tmpl", gin.H{"csrf": csrf.GetToken(c)})
+	c.HTML(http.StatusOK, "signin.tmpl", gin.H{})
 }
 
 func (ac *AuthController) SignupView(c *gin.Context) {
-	c.HTML(http.StatusOK, "signup.tmpl", gin.H{"csrf": csrf.GetToken(c)})
+	c.HTML(http.StatusOK, "signup.tmpl", gin.H{})
+}
+
+func (ac *AuthController) LogoutUser(c *gin.Context) {
+	c.SetCookie("access_token", "", -1, "/", "localhost", false, true)
+	c.SetCookie("refresh_token", "", -1, "/", "localhost", false, true)
+	c.SetCookie("logged_in", "", -1, "/", "localhost", false, false)
+
+	c.JSON(http.StatusOK, gin.H{"status": "success"})
 }
