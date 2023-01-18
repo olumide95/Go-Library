@@ -75,15 +75,17 @@ func (ac *AuthController) Login(c *gin.Context) {
 
 	user, err := ac.AuthUsecase.GetUserByEmail(request.Email)
 
+	session := util.NewSession(c)
+
 	if err != nil {
 		c.Redirect(http.StatusSeeOther, "/login")
-		util.FlashMessage(c, "User not found with the given email.")
+		session.SetFlashMessage("User not found with the given email.")
 		return
 	}
 
 	if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(request.Password)) != nil {
 		c.Redirect(http.StatusSeeOther, "/login")
-		util.FlashMessage(c, "Invalid credentials.")
+		session.SetFlashMessage("Invalid credentials.")
 		return
 	}
 
@@ -98,5 +100,6 @@ func (ac *AuthController) Login(c *gin.Context) {
 }
 
 func (ac *AuthController) LoginView(c *gin.Context) {
-	c.HTML(http.StatusOK, "signin.tmpl", gin.H{"messages": util.Flashes(c), "csrf": csrf.GetToken(c)})
+	session := util.NewSession(c)
+	c.HTML(http.StatusOK, "signin.tmpl", gin.H{"messages": session.GetFlashMessage(), "csrf": csrf.GetToken(c)})
 }
