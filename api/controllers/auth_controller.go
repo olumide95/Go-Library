@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/olumide95/go-library/api/util"
@@ -89,14 +90,8 @@ func (ac *AuthController) Login(c *gin.Context) {
 		return
 	}
 
-	loginResponse := &domain.LoginResponse{
-		ID:    user.ID,
-		Name:  user.Name,
-		Email: user.Email,
-		Role:  user.Role,
-	}
-
-	c.JSON(http.StatusOK, gin.H{"user": loginResponse})
+	session.SetSessionData(os.Getenv("USER_SESSION_KEY"), user.Email)
+	c.Redirect(http.StatusSeeOther, "/")
 }
 
 func (ac *AuthController) LoginView(c *gin.Context) {
