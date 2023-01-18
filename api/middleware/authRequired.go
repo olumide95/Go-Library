@@ -1,16 +1,18 @@
 package middleware
 
 import (
-	"github.com/gin-contrib/sessions"
+	"os"
+
 	"github.com/gin-gonic/gin"
+	"github.com/olumide95/go-library/api/util"
 
 	"log"
 	"net/http"
 )
 
 func AuthRequired(c *gin.Context) {
-	session := sessions.Default(c)
-	user := session.Get("user")
+	session := util.NewSession(c)
+	user := session.GetSessionData(os.Getenv("USER_SESSION_KEY"))
 	if user == nil {
 		log.Println("User not logged in")
 		c.Redirect(http.StatusMovedPermanently, "/login")

@@ -2,7 +2,6 @@ package util
 
 import (
 	"log"
-	"os"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -16,8 +15,8 @@ func NewSession(c *gin.Context) Session {
 	return Session{sessions.Default(c)}
 }
 
-func (s *Session) SetSessionData(data string) bool {
-	s.storage.Set(os.Getenv("SESSION_SECRET"), data)
+func (s *Session) SetSessionData(key string, data string) bool {
+	s.storage.Set(key, data)
 	if err := s.storage.Save(); err != nil {
 		log.Printf("error in saving session data: %s", err)
 		return false
@@ -26,8 +25,8 @@ func (s *Session) SetSessionData(data string) bool {
 	return true
 }
 
-func (s *Session) GetSessionData(message string) interface{} {
-	data := s.storage.Get(message)
+func (s *Session) GetSessionData(key string) interface{} {
+	data := s.storage.Get(key)
 	if err := s.storage.Save(); err != nil {
 		log.Printf("error in getting session data: %s", err)
 		return nil
@@ -35,8 +34,8 @@ func (s *Session) GetSessionData(message string) interface{} {
 	return data
 }
 
-func (s *Session) RemoveSessionData(message string) bool {
-	s.storage.AddFlash(message)
+func (s *Session) RemoveSessionData(key string) bool {
+	s.storage.Delete(key)
 	if err := s.storage.Save(); err != nil {
 		log.Printf("error in removing session data: %s", err)
 		return false
@@ -55,7 +54,7 @@ func (s *Session) SetFlashMessage(message string) bool {
 	return true
 }
 
-func (s *Session) GetFlashMessage(c *gin.Context) []interface{} {
+func (s *Session) GetFlashMessage() []interface{} {
 	flashes := s.storage.Flashes()
 	if len(flashes) != 0 {
 		if err := s.storage.Save(); err != nil {
