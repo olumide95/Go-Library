@@ -1,6 +1,7 @@
 const API_BASE = 'http://localhost:8080' 
 const SIGNIN_URL = '/login'
 const SIGNUP_URL = '/signup'
+const ADMIN_ROLE = 'Admin'
 
 document.getElementById('signin-form').addEventListener('submit', (e) => {
     e.preventDefault();
@@ -12,14 +13,20 @@ document.getElementById('signin-form').addEventListener('submit', (e) => {
     .then((reponse) => {
         localStorage.setItem('user', JSON.stringify(reponse.user))
         localStorage.setItem('access_token', reponse.access_token)
-        location.pathname = '/'
+
+        if(reponse.user.role == ADMIN_ROLE){
+            location.pathname = '/admin'
+            return
+        }
+
+        location.pathname = '/user'
     })
     .catch((response) => {
         response.json().then((r) => { alert(r.message) })
     });
 });
 
-document.getElementById('signup-form').addEventListener('submit', (e) => {
+document.getElementById('signup-form')?.addEventListener('submit', (e) => {
     e.preventDefault();
 
     const data = new FormData(e.target);
@@ -29,7 +36,12 @@ document.getElementById('signup-form').addEventListener('submit', (e) => {
     .then((reponse) => {
         localStorage.setItem('user', JSON.stringify(reponse.user))
         localStorage.setItem('access_token', reponse.access_token)
-        location.pathname = '/'
+        if(reponse.user.role == ADMIN_ROLE){
+            location.pathname = '/admin'
+            return
+        }
+
+        location.pathname = '/user'
     })
     .catch((response) => {
         response.json().then((r) => { alert(r.message) })
@@ -45,8 +57,6 @@ const fetchData = (method, url, data) => {
         headers: {
           'Content-Type': 'application/json'
         },
-        redirect: 'follow', 
-        referrerPolicy: 'no-referrer',
         body: data
       }).then((response) => {
         if (response.ok) {

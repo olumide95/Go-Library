@@ -2,10 +2,8 @@ package controller
 
 import (
 	"net/http"
-	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/olumide95/go-library/api/util"
 	"github.com/olumide95/go-library/domain"
 )
 
@@ -13,9 +11,10 @@ type DashboardController struct {
 	AuthUsecase domain.AuthUsecase
 }
 
-func (dc *DashboardController) Home(c *gin.Context) {
-	session := util.NewSession(c)
-	userEmail := session.GetSessionData(os.Getenv("USER_SESSION_KEY"))
+func (dc *DashboardController) AdminHome(c *gin.Context) {
+	c.HTML(http.StatusOK, "admin_dashboard.tmpl", gin.H{})
+}
 
-	c.HTML(http.StatusOK, "dashboard.tmpl", gin.H{"email": userEmail})
+func (dc *DashboardController) UserHome(c *gin.Context) {
+	c.HTML(http.StatusOK, "user_dashboard.tmpl", gin.H{})
 }

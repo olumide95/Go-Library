@@ -13,5 +13,6 @@ func DashboardRouter(r *gin.RouterGroup, DB *gorm.DB) {
 	dc := controller.DashboardController{
 		AuthUsecase: usecase.NewauthUsecase(ur),
 	}
-	r.GET("/", dc.Home)
+	r.GET("/admin", dc.AdminHome)
+	r.GET("/user", dc.UserHome)
 }
