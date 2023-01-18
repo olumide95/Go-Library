@@ -55,27 +55,32 @@ func (bu *bookUsecase) BorrowBook(id uint, userId uint) bool {
 	return true
 }
 
-func (bu *bookUsecase) ReturnBook(id uint, logId uint) bool {
-	bookLog, err := bu.bookLogRepository.GetByIDForUpdate(logId)
+func (bu *bookUsecase) ReturnBook(logId uint, userId uint) bool {
+	bookLog, err := bu.bookLogRepository.GetForUpdate(logId, userId)
 
 	if err != nil {
 		return false
 	}
 
-	book, err := bu.bookRepository.GetByIDForUpdate(id)
+	if bookLog.ReturnedAt != nil {
+		return false
+	}
+
+	book, err := bu.bookRepository.GetByIDForUpdate(bookLog.BookId)
 
 	if err != nil {
 		return false
 	}
 
 	book.Quantity += 1
-	result, err := bu.bookRepository.Update(id, &book)
+	result, err := bu.bookRepository.Update(book.ID, &book)
 
 	if err != nil || result == 0 {
 		return false
 	}
 
-	bookLog.ReturnedAt = time.Now()
+	now := time.Now()
+	bookLog.ReturnedAt = &now
 	result, err = bu.bookLogRepository.Update(logId, &bookLog)
 
 	if err != nil || result == 0 {

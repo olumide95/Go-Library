@@ -89,7 +89,14 @@ func (bc *BookController) BorrowBook(c *gin.Context) {
 		return
 	}
 
-	bookBorrowed := bc.BookUsecase.BorrowBook(request.ID, 1)
+	userId, exists := c.Get("currentUserId")
+
+	if !exists {
+		c.JSON(http.StatusNotFound, util.ErrorResponse{Message: "User not Found."})
+		return
+	}
+
+	bookBorrowed := bc.BookUsecase.BorrowBook(request.BookID, userId.(uint))
 
 	if !bookBorrowed {
 		c.JSON(http.StatusNotFound, util.ErrorResponse{Message: "Error Borrowing Book."})
@@ -109,12 +116,19 @@ func (bc *BookController) ReturnBook(c *gin.Context) {
 		return
 	}
 
-	bookBorrowed := bc.BookUsecase.ReturnBook(request.ID, request.LogID)
+	userId, exists := c.Get("currentUserId")
 
-	if !bookBorrowed {
+	if !exists {
+		c.JSON(http.StatusNotFound, util.ErrorResponse{Message: "User not Found."})
+		return
+	}
+
+	bookReturned := bc.BookUsecase.ReturnBook(request.LogID, userId.(uint))
+
+	if !bookReturned {
 		c.JSON(http.StatusNotFound, util.ErrorResponse{Message: "Error Returning Book."})
 		return
 	}
 
-	c.JSON(http.StatusOK, util.SuccessResponse{Message: "Book Returned Successfully!", Data: bookBorrowed})
+	c.JSON(http.StatusOK, util.SuccessResponse{Message: "Book Returned Successfully!", Data: bookReturned})
 }

@@ -28,9 +28,9 @@ func (ur *bookLogRepository) Update(id uint, bookLog *models.BookLog) (int64, er
 	return result.RowsAffected, result.Error
 }
 
-func (ur *bookLogRepository) GetByIDForUpdate(id uint) (models.BookLog, error) {
+func (ur *bookLogRepository) GetForUpdate(id uint, userId uint) (models.BookLog, error) {
 	var bookLog models.BookLog
-	result := ur.database.Clauses(clause.Locking{Strength: "UPDATE"}).First(&bookLog, "id = ?", id)
+	result := ur.database.Clauses(clause.Locking{Strength: "UPDATE"}).First(&bookLog, "id = ? and user_id = ?", id, userId)
 
 	return bookLog, result.Error
 }
