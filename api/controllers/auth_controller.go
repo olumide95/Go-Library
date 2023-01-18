@@ -20,14 +20,19 @@ func (ac *AuthController) Signup(c *gin.Context) {
 	var request *domain.SignupRequest
 
 	err := c.ShouldBind(&request)
+
+	session := util.NewSession(c)
+
 	if err != nil {
-		c.JSON(http.StatusBadRequest, util.ErrorResponse{Message: err.Error()})
+		c.Redirect(http.StatusSeeOther, "/signup")
+		session.SetFlashMessage(err.Error())
 		return
 	}
 
 	_, err = ac.AuthUsecase.GetUserByEmail(request.Email)
 	if err == nil {
-		c.JSON(http.StatusConflict, util.ErrorResponse{Message: "User already exists with the given email"})
+		c.Redirect(http.StatusSeeOther, "/signup")
+		session.SetFlashMessage("User already exists with the given email")
 		return
 	}
 
@@ -37,7 +42,8 @@ func (ac *AuthController) Signup(c *gin.Context) {
 	)
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, util.ErrorResponse{Message: err.Error()})
+		c.Redirect(http.StatusSeeOther, "/signup")
+		session.SetFlashMessage(err.Error())
 		return
 	}
 
@@ -47,22 +53,18 @@ func (ac *AuthController) Signup(c *gin.Context) {
 		Name:     request.Name,
 		Email:    request.Email,
 		Password: request.Password,
+		Role:     models.USER_ROLE,
 	}
 
 	err = ac.AuthUsecase.CreateUser(&user)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, util.ErrorResponse{Message: err.Error()})
+		c.Redirect(http.StatusSeeOther, "/signup")
+		session.SetFlashMessage(err.Error())
 		return
 	}
 
-	userResponse := &domain.SignupResponse{
-		ID:    user.ID,
-		Name:  user.Name,
-		Email: user.Email,
-		Role:  user.Role,
-	}
-
-	c.JSON(http.StatusOK, gin.H{"status": "success", "data": gin.H{"user": userResponse}})
+	session.SetSessionData(os.Getenv("USER_SESSION_KEY"), user.Email)
+	c.Redirect(http.StatusSeeOther, "/")
 }
 
 func (ac *AuthController) Login(c *gin.Context) {
@@ -97,4 +99,9 @@ func (ac *AuthController) Login(c *gin.Context) {
 func (ac *AuthController) LoginView(c *gin.Context) {
 	session := util.NewSession(c)
 	c.HTML(http.StatusOK, "signin.tmpl", gin.H{"messages": session.GetFlashMessage(), "csrf": csrf.GetToken(c)})
+}
+
+func (ac *AuthController) SignupView(c *gin.Context) {
+	session := util.NewSession(c)
+	c.HTML(http.StatusOK, "signup.tmpl", gin.H{"messages": session.GetFlashMessage(), "csrf": csrf.GetToken(c)})
 }

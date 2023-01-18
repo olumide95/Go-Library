@@ -14,6 +14,7 @@ func AuthRouter(r *gin.RouterGroup, DB *gorm.DB) {
 		AuthUsecase: usecase.NewauthUsecase(ur),
 	}
 	r.POST("/signup", sc.Signup)
+	r.GET("/signup", sc.SignupView)
 	r.POST("/login", sc.Login)
 	r.GET("/login", sc.LoginView)
 }

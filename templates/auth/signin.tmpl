@@ -10,7 +10,8 @@
   {{ end }}
 <br/>
  <form action="/login" method="POST">
-<span class="text-red"> {{ .error }} </span> 
+  <h1 class="h3 mb-3 fw-normal">Go Library</h1>
+
    <input type="hidden" name="_csrf" value="{{ .csrf }}" />
     <div class="form-floating">
       <input type="email" name="email" class="form-control" id="floatingInput" />
