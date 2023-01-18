@@ -39,19 +39,19 @@ func (ar *AuthenticatedMiddlware) Check(c *gin.Context) {
 	}
 
 	if access_token == "" {
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": "fail", "message": "You are not logged in"})
+		c.AbortWithStatusJSON(http.StatusUnauthorized, util.ErrorResponse{Message: "You are not logged in"})
 		return
 	}
 
 	sub, err := util.ValidateToken(access_token)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": "fail", "message": err.Error()})
+		c.AbortWithStatusJSON(http.StatusUnauthorized, util.ErrorResponse{Message: err.Error()})
 		return
 	}
 
 	user, err := ar.AuthUsecase.GetUserByEmail(fmt.Sprint(sub))
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"status": "fail", "message": "User does not exist"})
+		c.AbortWithStatusJSON(http.StatusForbidden, util.ErrorResponse{Message: "User does not exist"})
 		return
 	}
 

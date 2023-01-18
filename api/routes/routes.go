@@ -31,9 +31,8 @@ func Setup(DB *gorm.DB) {
 func PublicRoutes(router *gin.RouterGroup, DB *gorm.DB) {
 	AuthRouter(router, DB)
 	DashboardRouter(router, DB)
-	BookRouter(router, DB)
 }
 
 func PrivateRoutes(router *gin.RouterGroup, DB *gorm.DB) {
-
+	BookRouter(router, DB)
 }
