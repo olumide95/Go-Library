@@ -53,3 +53,48 @@ func (bc *BookController) StoreBooks(c *gin.Context) {
 func (bc *BookController) UpdateBook(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{})
 }
+
+func (bc *BookController) BorrowBook(c *gin.Context) {
+	var request *domain.BorrowBookRequest
+
+	err := c.ShouldBind(&request)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, util.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	RowsAffected, err := bc.BookUsecase.BorrowBook(request.ID)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, util.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	if RowsAffected == 0 {
+		c.JSON(http.StatusNotFound, util.ErrorResponse{Message: "Error Borrowing Book."})
+		return
+	}
+
+	c.JSON(http.StatusOK, util.SuccessResponse{Message: "Book Borrowed Successfully!", Data: RowsAffected})
+}
+
+func (bc *BookController) ReturnBook(c *gin.Context) {
+	var request *domain.ReturnBookRequest
+
+	err := c.ShouldBind(&request)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, util.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	RowsAffected, err := bc.BookUsecase.ReturnBook(request.ID)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, util.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": RowsAffected})
+}
