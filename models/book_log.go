@@ -6,7 +6,7 @@ type BookLog struct {
 	BookId     uint      `json:"book_id"`
 	UserId     uint      `json:"user_id" gorm:"index"`
 	BorrowedAt time.Time `gorm:"default:current_timestamp"`
-	ReturnedAt time.Time `json:"returned_at"`
+	ReturnedAt time.Time `gorm:"default:null"`
 	User       User      `gorm:"foreignKey:UserId"`
 	Book       Book      `gorm:"foreignKey:BookId"`
 }
