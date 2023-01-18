@@ -15,7 +15,7 @@ func NewSession(c *gin.Context) Session {
 	return Session{sessions.Default(c)}
 }
 
-func (s *Session) SetSessionData(key string, data string) bool {
+func (s *Session) SetSessionData(key string, data interface{}) bool {
 	s.storage.Set(key, data)
 	if err := s.storage.Save(); err != nil {
 		log.Printf("error in saving session data: %s", err)
