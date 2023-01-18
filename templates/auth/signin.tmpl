@@ -1,14 +1,6 @@
 {{ template "auth_header" .}}
 
  <main class="form-signin">
- {{ if .messages }}
-  {{ range .messages }}
-  <div class="flash-message text-red" role="alert">
-    {{ . }}
-  </div>
-  {{ end }}
-  {{ end }}
-<br/>
  <form action="/login" id="signin-form" method="POST">
   <h1 class="h3 mb-3 fw-normal">Go Library</h1>
     <div class="form-floating">

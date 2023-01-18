@@ -1,15 +1,8 @@
 {{ template "auth_header" .}}
 
  <main class="form-signin">
-  {{ if .messages }}
-  {{ range .messages }}
-  <div class="flash-message text-red" role="alert">
-    {{ . }}
-  </div>
-  {{ end }}
-  {{ end }}
-<br/>
- <form method="POST" action="/signup">
+ 
+ <form method="POST" id="signup-form" action="/signup">
     <h1 class="h3 mb-3 fw-normal">Go Library</h1>
 <input type="hidden" name="_csrf" value="{{ .csrf }}" />
     <div class="form-floating">

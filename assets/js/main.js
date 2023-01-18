@@ -1,11 +1,11 @@
 const API_BASE = 'http://localhost:8080' 
 const SIGNIN_URL = '/login'
+const SIGNUP_URL = '/signup'
 
 document.getElementById('signin-form').addEventListener('submit', (e) => {
     e.preventDefault();
 
     const data = new FormData(e.target);
-
     const request = Object.fromEntries(data.entries());
 
     fetchData('POST', SIGNIN_URL, JSON.stringify(request))
@@ -19,6 +19,22 @@ document.getElementById('signin-form').addEventListener('submit', (e) => {
     });
 });
 
+document.getElementById('signup-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const data = new FormData(e.target);
+    const request = Object.fromEntries(data.entries());
+
+    fetchData('POST', SIGNUP_URL, JSON.stringify(request))
+    .then((reponse) => {
+        localStorage.setItem('user', JSON.stringify(reponse.user))
+        localStorage.setItem('access_token', reponse.access_token)
+        location.pathname = '/'
+    })
+    .catch((response) => {
+        response.json().then((r) => { alert(r.message) })
+    });
+});
 
 const fetchData = (method, url, data) => {
     return fetch(SIGNIN_URL, {
