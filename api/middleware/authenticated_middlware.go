@@ -26,24 +26,24 @@ func NewAuthenticatedMiddlware(DB *gorm.DB) *AuthenticatedMiddlware {
 }
 
 func (ar *AuthenticatedMiddlware) Check(c *gin.Context) {
-	var access_token string
-	cookie, err := c.Cookie("access_token")
+	var accessToken string
+	cookie, err := c.Cookie("accessToken")
 
 	authorizationHeader := c.Request.Header.Get("Authorization")
 	fields := strings.Fields(authorizationHeader)
 
 	if len(fields) != 0 && fields[0] == "Bearer" {
-		access_token = fields[1]
+		accessToken = fields[1]
 	} else if err == nil {
-		access_token = cookie
+		accessToken = cookie
 	}
 
-	if access_token == "" {
+	if accessToken == "" {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, util.ErrorResponse{Message: "You are not logged in"})
 		return
 	}
 
-	sub, err := util.ValidateToken(access_token)
+	sub, err := util.ValidateToken(accessToken)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, util.ErrorResponse{Message: err.Error()})
 		return
@@ -55,6 +55,6 @@ func (ar *AuthenticatedMiddlware) Check(c *gin.Context) {
 		return
 	}
 
-	c.Set("currentUser", user)
+	c.Set("currentUserId", user.ID)
 	c.Next()
 }
