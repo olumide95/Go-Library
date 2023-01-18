@@ -64,19 +64,14 @@ func (bc *BookController) BorrowBook(c *gin.Context) {
 		return
 	}
 
-	RowsAffected, err := bc.BookUsecase.BorrowBook(request.ID)
+	bookBorrowed := bc.BookUsecase.BorrowBook(request.ID, 1)
 
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, util.ErrorResponse{Message: err.Error()})
-		return
-	}
-
-	if RowsAffected == 0 {
+	if !bookBorrowed {
 		c.JSON(http.StatusNotFound, util.ErrorResponse{Message: "Error Borrowing Book."})
 		return
 	}
 
-	c.JSON(http.StatusOK, util.SuccessResponse{Message: "Book Borrowed Successfully!", Data: RowsAffected})
+	c.JSON(http.StatusOK, util.SuccessResponse{Message: "Book Borrowed Successfully!", Data: bookBorrowed})
 }
 
 func (bc *BookController) ReturnBook(c *gin.Context) {

@@ -6,12 +6,14 @@ import (
 )
 
 type bookUsecase struct {
-	bookRepository models.BookRepository
+	bookRepository    models.BookRepository
+	bookLogRepository models.BookLogRepository
 }
 
-func NewbookUsecase(bookRepository models.BookRepository) domain.BookUsecase {
+func NewbookUsecase(bookRepository models.BookRepository, bookLogRepository models.BookLogRepository) domain.BookUsecase {
 	return &bookUsecase{
-		bookRepository: bookRepository,
+		bookRepository:    bookRepository,
+		bookLogRepository: bookLogRepository,
 	}
 }
 
@@ -23,15 +25,32 @@ func (bu *bookUsecase) Create(book *models.Book) error {
 	return bu.bookRepository.Create(book)
 }
 
-func (bu *bookUsecase) BorrowBook(id uint) (int64, error) {
+func (bu *bookUsecase) BorrowBook(id uint, userId uint) bool {
 	book, err := bu.bookRepository.GetByIDForUpdate(id)
 
+	if book.Quantity == 0 {
+		return false
+	}
+
 	if err != nil {
-		return 0, err
+		return false
 	}
 
 	book.Quantity -= 1
-	return bu.bookRepository.Update(id, &book)
+	result, err := bu.bookRepository.Update(id, &book)
+
+	if err != nil || result == 0 {
+		return false
+	}
+
+	bookLog := models.BookLog{BookId: id, UserId: userId}
+	err = bu.bookLogRepository.Create(&bookLog)
+
+	if err != nil {
+		return false
+	}
+
+	return true
 }
 
 func (bu *bookUsecase) ReturnBook(id uint, logId uint) (int64, error) {

@@ -10,10 +10,12 @@ import (
 )
 
 func BookRouter(r *gin.RouterGroup, DB *gorm.DB) {
-	ur := repository.NewBookRepository(DB)
+	br := repository.NewBookRepository(DB)
+	blr := repository.NewBookLogRepository(DB)
 	dc := controller.BookController{
-		BookUsecase: usecase.NewbookUsecase(ur),
+		BookUsecase: usecase.NewbookUsecase(br, blr),
 	}
+
 	r.GET("/books/all", dc.AllBooks)
 	r.POST("/books/store", dc.StoreBooks)
 	r.POST("/books/update", dc.UpdateBook)

@@ -10,3 +10,11 @@ type BookLog struct {
 	User       User      `gorm:"foreignKey:UserId"`
 	Book       Book      `gorm:"foreignKey:BookId"`
 }
+
+type BookLogRepository interface {
+	Create(bookLog *BookLog) error
+	Update(id uint, bookLog *BookLog) (int64, error)
+	GetByIDForUpdate(id uint) (BookLog, error)
+	Delete(id []uint) error
+	All() ([]BookLog, error)
+}
