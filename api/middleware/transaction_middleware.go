@@ -17,9 +17,8 @@ func StatusInList(status int, statusList []int) bool {
 	return false
 }
 
-func DBTransactionMiddleware(db *gorm.DB) gin.HandlerFunc {
+func DBTransactionMiddleware(txHandle *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		txHandle := db.Begin()
 		log.Print("beginning database transaction")
 
 		defer func() {
@@ -28,7 +27,6 @@ func DBTransactionMiddleware(db *gorm.DB) gin.HandlerFunc {
 			}
 		}()
 
-		c.Set("db_trx", txHandle)
 		c.Next()
 
 		if StatusInList(c.Writer.Status(), []int{http.StatusOK, http.StatusCreated}) {

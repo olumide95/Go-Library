@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"time"
+
 	"github.com/olumide95/go-library/domain"
 	"github.com/olumide95/go-library/models"
 )
@@ -28,11 +30,11 @@ func (bu *bookUsecase) Create(book *models.Book) error {
 func (bu *bookUsecase) BorrowBook(id uint, userId uint) bool {
 	book, err := bu.bookRepository.GetByIDForUpdate(id)
 
-	if book.Quantity == 0 {
+	if err != nil {
 		return false
 	}
 
-	if err != nil {
+	if book.Quantity == 0 {
 		return false
 	}
 
@@ -53,15 +55,34 @@ func (bu *bookUsecase) BorrowBook(id uint, userId uint) bool {
 	return true
 }
 
-func (bu *bookUsecase) ReturnBook(id uint, logId uint) (int64, error) {
+func (bu *bookUsecase) ReturnBook(id uint, logId uint) bool {
+	bookLog, err := bu.bookLogRepository.GetByIDForUpdate(logId)
+
+	if err != nil {
+		return false
+	}
+
 	book, err := bu.bookRepository.GetByIDForUpdate(id)
 
 	if err != nil {
-		return 0, err
+		return false
 	}
 
 	book.Quantity += 1
-	return bu.bookRepository.Update(id, &book)
+	result, err := bu.bookRepository.Update(id, &book)
+
+	if err != nil || result == 0 {
+		return false
+	}
+
+	bookLog.ReturnedAt = time.Now()
+	result, err = bu.bookLogRepository.Update(logId, &bookLog)
+
+	if err != nil || result == 0 {
+		return false
+	}
+
+	return true
 }
 
 func (bu *bookUsecase) UpdateBookQuantity(id uint, quantity uint16) (int64, error) {

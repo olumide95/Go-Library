@@ -16,7 +16,7 @@ type BorrowBookRequest struct {
 
 type ReturnBookRequest struct {
 	ID    uint `form:"id" binding:"required"`
-	LogID uint `form:"log_id" binding:"required"`
+	LogID uint `form:"logId" binding:"required"`
 }
 
 type DeleteBooksRequest []struct {
@@ -27,7 +27,7 @@ type BookUsecase interface {
 	Create(book *models.Book) error
 	UpdateBookQuantity(id uint, quantity uint16) (int64, error)
 	BorrowBook(id uint, userId uint) bool
-	ReturnBook(id uint, logId uint) (int64, error)
+	ReturnBook(id uint, logId uint) bool
 	CreateBulk(books *[]models.Book) error
 	GetBookByID(id uint) (models.Book, error)
 	Delete(id []uint) (int64, error)

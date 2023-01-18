@@ -109,12 +109,12 @@ func (bc *BookController) ReturnBook(c *gin.Context) {
 		return
 	}
 
-	RowsAffected, err := bc.BookUsecase.ReturnBook(request.ID, request.LogID)
+	bookBorrowed := bc.BookUsecase.ReturnBook(request.ID, request.LogID)
 
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, util.ErrorResponse{Message: err.Error()})
+	if !bookBorrowed {
+		c.JSON(http.StatusNotFound, util.ErrorResponse{Message: "Error Returning Book."})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": RowsAffected})
+	c.JSON(http.StatusOK, util.SuccessResponse{Message: "Book Returned Successfully!", Data: bookBorrowed})
 }

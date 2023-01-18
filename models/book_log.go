@@ -3,6 +3,7 @@ package models
 import "time"
 
 type BookLog struct {
+	ID         uint      `json:"id" gorm:"primary_key"`
 	BookId     uint      `json:"book_id"`
 	UserId     uint      `json:"user_id" gorm:"index"`
 	BorrowedAt time.Time `gorm:"default:current_timestamp"`
