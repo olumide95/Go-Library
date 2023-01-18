@@ -89,7 +89,7 @@ func (bc *BookController) ReturnBook(c *gin.Context) {
 		return
 	}
 
-	RowsAffected, err := bc.BookUsecase.ReturnBook(request.ID)
+	RowsAffected, err := bc.BookUsecase.ReturnBook(request.ID, request.LogID)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, util.ErrorResponse{Message: err.Error()})

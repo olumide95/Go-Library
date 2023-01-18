@@ -3,6 +3,7 @@ package repository
 import (
 	"github.com/olumide95/go-library/models"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type bookRepository struct {
@@ -37,6 +38,13 @@ func (ur *bookRepository) Update(id uint, book *models.Book) (int64, error) {
 func (ur *bookRepository) GetByID(id uint) (models.Book, error) {
 	var book models.Book
 	result := ur.database.First(&book, "id = ?", id)
+
+	return book, result.Error
+}
+
+func (ur *bookRepository) GetByIDForUpdate(id uint) (models.Book, error) {
+	var book models.Book
+	result := ur.database.Clauses(clause.Locking{Strength: "UPDATE"}).First(&book, "id = ?", id)
 
 	return book, result.Error
 }

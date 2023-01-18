@@ -24,12 +24,24 @@ func (bu *bookUsecase) Create(book *models.Book) error {
 }
 
 func (bu *bookUsecase) BorrowBook(id uint) (int64, error) {
-	book := models.Book{Quantity: 1}
+	book, err := bu.bookRepository.GetByIDForUpdate(id)
+
+	if err != nil {
+		return 0, err
+	}
+
+	book.Quantity -= 1
 	return bu.bookRepository.Update(id, &book)
 }
 
-func (bu *bookUsecase) ReturnBook(id uint) (int64, error) {
-	book := models.Book{Quantity: 1}
+func (bu *bookUsecase) ReturnBook(id uint, logId uint) (int64, error) {
+	book, err := bu.bookRepository.GetByIDForUpdate(id)
+
+	if err != nil {
+		return 0, err
+	}
+
+	book.Quantity += 1
 	return bu.bookRepository.Update(id, &book)
 }
 
