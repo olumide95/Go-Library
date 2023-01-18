@@ -42,6 +42,13 @@ func (ur *bookLogRepository) Delete(id []uint) error {
 	return result.Error
 }
 
+func (ur *bookLogRepository) DeleteByBookIds(bookIds []uint) error {
+	var bookLog models.BookLog
+	result := ur.database.Where("book_id IN ?", bookIds).Delete(&bookLog)
+
+	return result.Error
+}
+
 func (ur *bookLogRepository) All() ([]models.BookLog, error) {
 	var bookLogs []models.BookLog
 	result := ur.database.Find(&bookLogs)

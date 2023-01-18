@@ -103,6 +103,18 @@ func (bu *bookUsecase) GetBookByID(id uint) (models.Book, error) {
 	return bu.bookRepository.GetByID(id)
 }
 
-func (bu *bookUsecase) Delete(id []uint) (int64, error) {
-	return bu.bookRepository.Delete(id)
+func (bu *bookUsecase) Delete(ids []uint) bool {
+	err := bu.bookLogRepository.DeleteByBookIds(ids)
+
+	if err != nil {
+		return false
+	}
+
+	result, err := bu.bookRepository.Delete(ids)
+
+	if err != nil || result == 0 {
+		return false
+	}
+
+	return true
 }

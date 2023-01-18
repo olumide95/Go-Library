@@ -29,6 +29,6 @@ type BookUsecase interface {
 	ReturnBook(logId uint, userId uint) bool
 	CreateBulk(books *[]models.Book) error
 	GetBookByID(id uint) (models.Book, error)
-	Delete(id []uint) (int64, error)
+	Delete(id []uint) bool
 	AllBooks() ([]models.Book, error)
 }

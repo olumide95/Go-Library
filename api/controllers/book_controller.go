@@ -51,6 +51,14 @@ func (bc *BookController) StoreBooks(c *gin.Context) {
 }
 
 func (bc *BookController) UpdateBook(c *gin.Context) {
+	var request *domain.StoreBooksRequest
+
+	err := c.ShouldBind(&request)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, util.ErrorResponse{Message: err.Error()})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{})
 }
 
@@ -69,9 +77,9 @@ func (bc *BookController) DeleteBooks(c *gin.Context) {
 		IDs = append(IDs, val.ID)
 	}
 
-	RowsAffected, err := bc.BookUsecase.Delete(IDs)
+	booksDeleted := bc.BookUsecase.Delete(IDs)
 
-	if err != nil || RowsAffected == 0 {
+	if !booksDeleted {
 		c.JSON(http.StatusNotFound, util.ErrorResponse{Message: "Error Deleting Books."})
 		return
 	}
