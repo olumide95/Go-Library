@@ -22,7 +22,7 @@ func Setup(DB *gorm.DB) {
 	PublicRoutes(router.Group("/"), DB)
 
 	private := router.Group("/")
-	private.Use(middleware.AuthRequired)
+	private.Use(middleware.NewAuthenticatedMiddlware(DB).Check)
 	PrivateRoutes(private, DB)
 
 	router.Run()

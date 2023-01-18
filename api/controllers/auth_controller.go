@@ -62,7 +62,7 @@ func (ac *AuthController) Signup(c *gin.Context) {
 		Role:  user.Role,
 	}
 
-	access_token, _ := util.CreateToken(userResponse)
+	access_token, _ := util.CreateToken(user.Email)
 
 	c.SetCookie("access_token", access_token, 86400, "/", "localhost", false, true)
 	c.SetCookie("logged_in", "true", 86400, "/", "localhost", false, false)
@@ -103,7 +103,7 @@ func (ac *AuthController) Login(c *gin.Context) {
 		Role:  user.Role,
 	}
 
-	access_token, _ := util.CreateToken(loginResponse)
+	access_token, _ := util.CreateToken(user.Email)
 
 	c.SetCookie("access_token", access_token, 86400, "/", "localhost", false, true)
 	c.SetCookie("logged_in", "true", 86400, "/", "localhost", false, false)

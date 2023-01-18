@@ -38,7 +38,8 @@ func CreateToken(payload interface{}) (string, error) {
 	return token, nil
 }
 
-func ValidateToken(token string, publicKey string) (interface{}, error) {
+func ValidateToken(token string) (interface{}, error) {
+	publicKey := os.Getenv("ACCESS_TOKEN_PUBLIC_KEY")
 	decodedPublicKey, err := base64.StdEncoding.DecodeString(publicKey)
 	if err != nil {
 		return nil, fmt.Errorf("could not decode: %w", err)
