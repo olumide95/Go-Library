@@ -22,3 +22,11 @@ func (dc *DashboardController) AdminHome(c *gin.Context) {
 func (dc *DashboardController) UserHome(c *gin.Context) {
 	c.HTML(http.StatusOK, "user_dashboard.tmpl", gin.H{})
 }
+
+func (dc *DashboardController) BorrowBook(c *gin.Context) {
+	c.HTML(http.StatusOK, "user_borrow_book.tmpl", gin.H{})
+}
+
+func (dc *DashboardController) ReturnBook(c *gin.Context) {
+	c.HTML(http.StatusOK, "user_return_book.tmpl", gin.H{})
+}

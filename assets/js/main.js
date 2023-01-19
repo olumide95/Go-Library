@@ -5,7 +5,7 @@ const ADMIN_ROLE = 'Admin'
 
 
 const isLoggedIn = () => {
-    return !!localStorage.getItem('access_token', reponse.access_token);
+    return !!localStorage.getItem('access_token');
 }
 
 const logOut = () => {
@@ -36,7 +36,7 @@ document.getElementById('signin-form')?.addEventListener('submit', (e) => {
     const data = new FormData(e.target);
     const request = Object.fromEntries(data.entries());
 
-    fetchData('POST', SIGNIN_URL, JSON.stringify(request))
+    fetchData('POST', API_BASE+SIGNIN_URL, JSON.stringify(request))
     .then((reponse) => {
         localStorage.setItem('user', JSON.stringify(reponse.user))
         localStorage.setItem('access_token', reponse.access_token)
@@ -59,7 +59,7 @@ document.getElementById('signup-form')?.addEventListener('submit', (e) => {
     const data = new FormData(e.target);
     const request = Object.fromEntries(data.entries());
 
-    fetchData('POST', SIGNUP_URL, JSON.stringify(request))
+    fetchData('POST', API_BASE+SIGNUP_URL, JSON.stringify(request))
     .then((reponse) => {
         localStorage.setItem('user', JSON.stringify(reponse.user))
         localStorage.setItem('access_token', reponse.access_token)
@@ -76,14 +76,17 @@ document.getElementById('signup-form')?.addEventListener('submit', (e) => {
 });
 
 const fetchData = (method, url, data) => {
-    return fetch(SIGNIN_URL, {
+
+    const bearer_token = "Bearer " + localStorage.getItem('access_token')
+
+    return fetch(url, {
         method: method,
         mode: 'cors',
         cache: 'no-cache',
         credentials: 'same-origin', 
         headers: {
-          'Content-Type': 'application/json'
-        },
+            Authorization: bearer_token, 
+            'Content-Type': 'application/json'},
         body: data
       }).then((response) => {
         if (response.ok) {

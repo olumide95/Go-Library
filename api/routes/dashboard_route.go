@@ -16,4 +16,6 @@ func DashboardRouter(r *gin.RouterGroup, DB *gorm.DB) {
 	r.GET("/", dc.Home)
 	r.GET("/admin", dc.AdminHome)
 	r.GET("/user", dc.UserHome)
+	r.GET("/user/borrow-book", dc.BorrowBook)
+	r.GET("/user/return-book", dc.ReturnBook)
 }
