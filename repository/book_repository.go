@@ -35,6 +35,13 @@ func (br *bookRepository) Update(id uint, book *models.Book) (int64, error) {
 	return result.RowsAffected, result.Error
 }
 
+func (br *bookRepository) GetByIds(ids []uint) ([]models.Book, error) {
+	var book []models.Book
+	result := br.database.First(&book, "id IN ?", ids)
+
+	return book, result.Error
+}
+
 func (br *bookRepository) GetByID(id uint) (models.Book, error) {
 	var book models.Book
 	result := br.database.First(&book, "id = ?", id)
