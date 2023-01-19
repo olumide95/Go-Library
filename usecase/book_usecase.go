@@ -1,7 +1,6 @@
 package usecase
 
 import (
-	"log"
 	"time"
 
 	"github.com/olumide95/go-library/domain"
@@ -25,11 +24,14 @@ func (bu *bookUsecase) AllBooks() ([]models.Book, error) {
 }
 
 func (bu *bookUsecase) AllBorrowedBooks(userId uint) ([]models.Book, error) {
-	bookLog, err := bu.bookLogRepository.GetIDsByUserId(userId)
+	bookIds, _ := bu.bookLogRepository.GetIDsByUserId(userId)
 
-	log.Print(bookLog, err)
+	var Ids []uint
 
-	return bu.bookRepository.All()
+	for _, val := range bookIds {
+		Ids = append(Ids, val.BookId)
+	}
+	return bu.bookRepository.GetByIds(Ids)
 }
 
 func (bu *bookUsecase) Create(book *models.Book) error {

@@ -15,11 +15,7 @@ type BookController struct {
 
 func (bc *BookController) AllBooks(c *gin.Context) {
 	var books []models.Book
-	books, err := bc.BookUsecase.AllBooks()
-
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"books": util.ErrorResponse{Message: err.Error()}})
-	}
+	books, _ = bc.BookUsecase.AllBooks()
 
 	c.JSON(http.StatusOK, util.SuccessResponse{Message: "Books retrived Successfully!", Data: books})
 }
@@ -33,11 +29,7 @@ func (bc *BookController) AllBorrowedBooks(c *gin.Context) {
 	}
 
 	var books []models.Book
-	books, err := bc.BookUsecase.AllBorrowedBooks(userId.(uint))
-
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"books": util.ErrorResponse{Message: err.Error()}})
-	}
+	books, _ = bc.BookUsecase.AllBorrowedBooks(userId.(uint))
 
 	c.JSON(http.StatusOK, util.SuccessResponse{Message: "Books retrived Successfully!", Data: books})
 }
