@@ -26,15 +26,8 @@ func (bu *bookUsecase) AllBooks() ([]models.Book, error) {
 	return bu.bookRepository.All()
 }
 
-func (bu *bookUsecase) AllBorrowedBooks(userId uint) ([]models.Book, error) {
-	bookIds, _ := bu.bookLogRepository.GetIDsByUserId(userId)
-
-	var Ids []uint
-
-	for _, val := range bookIds {
-		Ids = append(Ids, val.BookId)
-	}
-	return bu.bookRepository.GetByIds(Ids)
+func (bu *bookUsecase) AllBorrowedBooks(userId uint) ([]models.BookLog, error) {
+	return bu.bookLogRepository.GetWithBooks(userId)
 }
 
 func (bu *bookUsecase) Create(book *models.Book) error {

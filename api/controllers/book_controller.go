@@ -29,7 +29,7 @@ func (bc *BookController) AllBorrowedBooks(c *gin.Context) {
 		return
 	}
 
-	var books []models.Book
+	var books []models.BookLog
 	books, _ = bc.BookUsecase.AllBorrowedBooks(userId.(uint))
 
 	c.JSON(http.StatusOK, util.SuccessResponse{Message: "Books retrived Successfully!", Data: books})

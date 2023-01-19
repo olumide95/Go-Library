@@ -39,7 +39,7 @@ func (br *bookRepository) Update(id uint, book *models.Book) (int64, error) {
 
 func (br *bookRepository) GetByIds(ids []uint) ([]models.Book, error) {
 	var book []models.Book
-	result := br.database.First(&book, "id IN ?", ids)
+	result := br.database.Find(&book, "id IN ?", ids)
 
 	return book, result.Error
 }

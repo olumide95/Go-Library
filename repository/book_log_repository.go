@@ -37,9 +37,9 @@ func (blr *bookLogRepository) GetForUpdate(id uint, userId uint) (models.BookLog
 	return bookLog, result.Error
 }
 
-func (blr *bookLogRepository) GetIDsByUserId(userId uint) ([]models.BookLog, error) {
+func (blr *bookLogRepository) GetWithBooks(userId uint) ([]models.BookLog, error) {
 	var bookLog []models.BookLog
-	result := blr.database.Where("user_id = ?", userId).Pluck("book_id", &bookLog)
+	result := blr.database.Joins("Book").Find(&bookLog, "user_id = ?", userId)
 
 	return bookLog, result.Error
 }
