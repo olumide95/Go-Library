@@ -19,7 +19,14 @@ func BookRouter(r *gin.RouterGroup, DB *gorm.DB) {
 	r.GET("/books/all", dc.AllBooks)
 	r.POST("/books/store", dc.StoreBooks)
 	r.GET("/books/borrowed-books", dc.AllBorrowedBooks)
+}
 
+func BookRouterWithTx(r *gin.RouterGroup, DB *gorm.DB) {
+	br := repository.NewBookRepository(DB)
+	blr := repository.NewBookLogRepository(DB)
+	dc := controller.BookController{
+		BookUsecase: usecase.NewbookUsecase(br, blr),
+	}
 	//Routes With DB Transaction
 	r.PATCH("/books/update", middleware.DBTransactionMiddleware(DB), dc.UpdateBook)
 	r.PATCH("/books/borrow", middleware.DBTransactionMiddleware(DB), dc.BorrowBook)

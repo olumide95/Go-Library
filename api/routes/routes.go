@@ -28,4 +28,5 @@ func PublicRoutes(router *gin.RouterGroup, DB *gorm.DB) {
 
 func PrivateRoutes(router *gin.RouterGroup, DB *gorm.DB) {
 	BookRouter(router, DB)
+	BookRouterWithTx(router, DB)
 }
