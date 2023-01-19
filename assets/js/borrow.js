@@ -2,6 +2,11 @@ const ALL_BOOKS_URL = '/books/all'
 const BORROW_BOOK_URL = '/books/borrow'
 
 const getAvailableBooks = () => {
+    if(!isLoggedIn()){
+        location.pathname = '/login'
+        return
+    }
+
     fetchData('GET', API_BASE+ALL_BOOKS_URL)
     .then((response) => {
         let tableRow = '';
@@ -28,6 +33,5 @@ fetchData('PATCH', API_BASE+BORROW_BOOK_URL, JSON.stringify({bookId: parseInt(e.
         response.json().then((r) => { alert(r.message) })
     });
 }
-
 
 getAvailableBooks()

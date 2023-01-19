@@ -2,6 +2,11 @@ const BORROWED_BOOKS_URL = '/books/borrowed-books'
 const RETURN_BOOK_URL = '/books/return'
 
 const getBorrowedBooks = () => {
+    if(!isLoggedIn()){
+        location.pathname = '/login'
+        return
+    }
+
     fetchData('GET', API_BASE+BORROWED_BOOKS_URL)
     .then((response) => {
         let tableRow = '';
@@ -29,6 +34,5 @@ fetchData('PATCH', API_BASE+RETURN_BOOK_URL, JSON.stringify({logId: parseInt(e.d
         response.json().then((r) => { alert(r.message) })
     });
 }
-
 
 getBorrowedBooks()
