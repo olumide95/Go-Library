@@ -14,44 +14,51 @@ func NewBookLogRepository(DB *gorm.DB) models.BookLogRepository {
 	return &bookLogRepository{DB}
 }
 
-func (ur *bookLogRepository) Create(bookLog *models.BookLog) error {
+func (blr *bookLogRepository) Create(bookLog *models.BookLog) error {
 
-	result := ur.database.Create(bookLog)
+	result := blr.database.Create(bookLog)
 
 	return result.Error
 }
 
-func (ur *bookLogRepository) Update(id uint, bookLog *models.BookLog) (int64, error) {
+func (blr *bookLogRepository) Update(id uint, bookLog *models.BookLog) (int64, error) {
 
-	result := ur.database.Where("id = ?", id).Updates(bookLog)
+	result := blr.database.Where("id = ?", id).Updates(bookLog)
 
 	return result.RowsAffected, result.Error
 }
 
-func (ur *bookLogRepository) GetForUpdate(id uint, userId uint) (models.BookLog, error) {
+func (blr *bookLogRepository) GetForUpdate(id uint, userId uint) (models.BookLog, error) {
 	var bookLog models.BookLog
-	result := ur.database.Clauses(clause.Locking{Strength: "UPDATE"}).First(&bookLog, "id = ? and user_id = ?", id, userId)
+	result := blr.database.Clauses(clause.Locking{Strength: "UPDATE"}).First(&bookLog, "id = ? and user_id = ?", id, userId)
 
 	return bookLog, result.Error
 }
 
-func (ur *bookLogRepository) Delete(id []uint) error {
+func (blr *bookLogRepository) GetIDsByUserId(userId uint) ([]models.BookLog, error) {
+	var bookLog []models.BookLog
+	result := blr.database.Where("user_id = ?", userId).Pluck("book_id", &bookLog)
+
+	return bookLog, result.Error
+}
+
+func (blr *bookLogRepository) Delete(id []uint) error {
 	var bookLog models.BookLog
-	result := ur.database.Delete(&bookLog, id)
+	result := blr.database.Delete(&bookLog, id)
 
 	return result.Error
 }
 
-func (ur *bookLogRepository) DeleteByBookIds(bookIds []uint) error {
+func (blr *bookLogRepository) DeleteByBookIds(bookIds []uint) error {
 	var bookLog models.BookLog
-	result := ur.database.Where("book_id IN ?", bookIds).Delete(&bookLog)
+	result := blr.database.Where("book_id IN ?", bookIds).Delete(&bookLog)
 
 	return result.Error
 }
 
-func (ur *bookLogRepository) All() ([]models.BookLog, error) {
+func (blr *bookLogRepository) All() ([]models.BookLog, error) {
 	var bookLogs []models.BookLog
-	result := ur.database.Find(&bookLogs)
+	result := blr.database.Find(&bookLogs)
 
 	return bookLogs, result.Error
 }
