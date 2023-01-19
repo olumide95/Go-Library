@@ -91,11 +91,6 @@ func (ac *AuthController) Login(c *gin.Context) {
 		return
 	}
 
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": err.Error()})
-		return
-	}
-
 	loginResponse := &domain.LoginResponse{
 		ID:    user.ID,
 		Name:  user.Name,
@@ -121,7 +116,6 @@ func (ac *AuthController) SignupView(c *gin.Context) {
 
 func (ac *AuthController) LogoutUser(c *gin.Context) {
 	c.SetCookie("access_token", "", -1, "/", "localhost", false, true)
-	c.SetCookie("refresh_token", "", -1, "/", "localhost", false, true)
 	c.SetCookie("logged_in", "", -1, "/", "localhost", false, false)
 
 	c.JSON(http.StatusOK, gin.H{"status": "success"})
