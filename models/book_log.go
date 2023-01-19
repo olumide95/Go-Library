@@ -16,7 +16,7 @@ type BookLogRepository interface {
 	Create(bookLog *BookLog) error
 	Update(id uint, bookLog *BookLog) (int64, error)
 	GetForUpdate(id uint, userId uint) (BookLog, error)
-	GetIDsByUserId(userId uint) (BookLog, error)
+	GetIDsByUserId(userId uint) ([]BookLog, error)
 	Delete(id []uint) error
 	DeleteByBookIds(bookIds []uint) error
 	All() ([]BookLog, error)
