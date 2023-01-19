@@ -26,7 +26,6 @@ const borrowBook = (e) => {
 
 fetchData('PATCH', API_BASE+BORROW_BOOK_URL, JSON.stringify({bookId: parseInt(e.dataset.id)}))
     .then((response) => {
-        console.log(response)
         getAvailableBooks()
     })
     .catch((response) => {
