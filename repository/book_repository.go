@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"log"
+
 	"github.com/olumide95/go-library/models"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -30,7 +32,7 @@ func (br *bookRepository) CreateBulk(book *[]models.Book) error {
 
 func (br *bookRepository) Update(id uint, book *models.Book) (int64, error) {
 
-	result := br.database.Where("id = ?", id).Updates(book)
+	result := br.database.Select("*").Where("id = ?", id).Updates(book)
 
 	return result.RowsAffected, result.Error
 }
@@ -68,4 +70,13 @@ func (br *bookRepository) All() ([]models.Book, error) {
 	result := br.database.Find(&books)
 
 	return books, result.Error
+}
+
+func (br *bookRepository) WithTrx(trxHandle *gorm.DB) models.BookRepository {
+	if trxHandle == nil {
+		log.Print("Transaction Database not found")
+		return br
+	}
+	br.database = trxHandle
+	return br
 }

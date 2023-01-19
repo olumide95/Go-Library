@@ -1,6 +1,10 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type Book struct {
 	ID        uint      `json:"id" gorm:"primary_key"`
@@ -20,4 +24,5 @@ type BookRepository interface {
 	GetByIDForUpdate(id uint) (Book, error)
 	Delete(id []uint) (int64, error)
 	All() ([]Book, error)
+	WithTrx(txHandle *gorm.DB) BookRepository
 }

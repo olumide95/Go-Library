@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"log"
+
 	"github.com/olumide95/go-library/models"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -61,4 +63,13 @@ func (blr *bookLogRepository) All() ([]models.BookLog, error) {
 	result := blr.database.Find(&bookLogs)
 
 	return bookLogs, result.Error
+}
+
+func (blr *bookLogRepository) WithTrx(trxHandle *gorm.DB) models.BookLogRepository {
+	if trxHandle == nil {
+		log.Print("Transaction Database not found")
+		return blr
+	}
+	blr.database = trxHandle
+	return blr
 }

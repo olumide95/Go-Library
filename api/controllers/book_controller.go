@@ -7,6 +7,7 @@ import (
 	"github.com/olumide95/go-library/api/util"
 	"github.com/olumide95/go-library/domain"
 	"github.com/olumide95/go-library/models"
+	"gorm.io/gorm"
 )
 
 type BookController struct {
@@ -72,7 +73,9 @@ func (bc *BookController) UpdateBook(c *gin.Context) {
 
 	book := models.Book{ID: request.ID, Title: request.Title, Author: request.Author, Quantity: request.Quantity}
 
-	bookUpdated := bc.BookUsecase.UpdateBook(&book)
+	txHandle := c.MustGet("db_trx").(*gorm.DB)
+
+	bookUpdated := bc.BookUsecase.WithTrx(txHandle).UpdateBook(&book)
 
 	if !bookUpdated {
 		c.JSON(http.StatusInternalServerError, util.SuccessResponse{Message: "Error Updating Book!"})
@@ -97,7 +100,8 @@ func (bc *BookController) DeleteBooks(c *gin.Context) {
 		IDs = append(IDs, val.ID)
 	}
 
-	booksDeleted := bc.BookUsecase.Delete(IDs)
+	txHandle := c.MustGet("db_trx").(*gorm.DB)
+	booksDeleted := bc.BookUsecase.WithTrx(txHandle).Delete(IDs)
 
 	if !booksDeleted {
 		c.JSON(http.StatusInternalServerError, util.ErrorResponse{Message: "Error Deleting Books."})
@@ -124,7 +128,8 @@ func (bc *BookController) BorrowBook(c *gin.Context) {
 		return
 	}
 
-	bookBorrowed := bc.BookUsecase.BorrowBook(request.BookID, userId.(uint))
+	txHandle := c.MustGet("db_trx").(*gorm.DB)
+	bookBorrowed := bc.BookUsecase.WithTrx(txHandle).BorrowBook(request.BookID, userId.(uint))
 
 	if !bookBorrowed {
 		c.JSON(http.StatusInternalServerError, util.ErrorResponse{Message: "Error Borrowing Book."})
@@ -151,7 +156,8 @@ func (bc *BookController) ReturnBook(c *gin.Context) {
 		return
 	}
 
-	bookReturned := bc.BookUsecase.ReturnBook(request.LogID, userId.(uint))
+	txHandle := c.MustGet("db_trx").(*gorm.DB)
+	bookReturned := bc.BookUsecase.WithTrx(txHandle).ReturnBook(request.LogID, userId.(uint))
 
 	if !bookReturned {
 		c.JSON(http.StatusInternalServerError, util.ErrorResponse{Message: "Error Returning Book."})

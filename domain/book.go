@@ -2,6 +2,7 @@ package domain
 
 import (
 	"github.com/olumide95/go-library/models"
+	"gorm.io/gorm"
 )
 
 type StoreBooksRequest []struct {
@@ -39,4 +40,5 @@ type BookUsecase interface {
 	Delete(id []uint) bool
 	AllBooks() ([]models.Book, error)
 	AllBorrowedBooks(userId uint) ([]models.Book, error)
+	WithTrx(txHandle *gorm.DB) BookUsecase
 }

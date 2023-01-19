@@ -1,10 +1,13 @@
 package usecase
 
 import (
+	"log"
+	"strconv"
 	"time"
 
 	"github.com/olumide95/go-library/domain"
 	"github.com/olumide95/go-library/models"
+	"gorm.io/gorm"
 )
 
 type bookUsecase struct {
@@ -42,28 +45,28 @@ func (bu *bookUsecase) BorrowBook(id uint, userId uint) bool {
 	book, err := bu.bookRepository.GetByIDForUpdate(id)
 
 	if err != nil {
+		log.Println("Error getting book with id: "+strconv.FormatUint(uint64(id), 10), err)
 		return false
 	}
 
 	if book.Quantity == 0 {
+		log.Println("Error Updating book with id: "+strconv.FormatUint(uint64(id), 10)+". Book quantity is 0", err)
 		return false
 	}
 
 	book.Quantity -= 1
 	result, err := bu.bookRepository.Update(id, &book)
 
+	log.Println(book.Quantity)
 	if err != nil || result == 0 {
+		log.Println("Error Updating book with id: "+strconv.FormatUint(uint64(id), 10), err)
 		return false
 	}
 
 	bookLog := models.BookLog{BookId: id, UserId: userId}
 	err = bu.bookLogRepository.Create(&bookLog)
 
-	if err != nil {
-		return false
-	}
-
-	return true
+	return err == nil
 }
 
 func (bu *bookUsecase) ReturnBook(logId uint, userId uint) bool {
@@ -140,4 +143,10 @@ func (bu *bookUsecase) Delete(ids []uint) bool {
 	}
 
 	return true
+}
+
+func (bu *bookUsecase) WithTrx(trxHandle *gorm.DB) domain.BookUsecase {
+	bu.bookRepository = bu.bookRepository.WithTrx(trxHandle)
+	bu.bookLogRepository = bu.bookLogRepository.WithTrx(trxHandle)
+	return bu
 }
