@@ -3,7 +3,7 @@ const SIGNIN_URL = '/login'
 const SIGNUP_URL = '/signup'
 const ADMIN_ROLE = 'Admin'
 
-document.getElementById('signin-form').addEventListener('submit', (e) => {
+document.getElementById('signin-form')?.addEventListener('submit', (e) => {
     e.preventDefault();
 
     const data = new FormData(e.target);

@@ -1,7 +1,7 @@
-{{ template "auth_header" .}}
+{{ template "header" .}}
 
  <main class="form-signin">
- 
+
  <form method="POST" id="signup-form" action="/signup">
     <h1 class="h3 mb-3 fw-normal">Go Library</h1>
 <input type="hidden" name="_csrf" value="{{ .csrf }}" />
@@ -24,4 +24,4 @@
      <span>Already have an account? <a href="login"> Login </a></span>
   </form>
   </main>
-{{ template "auth_footer" .}}
+{{ template "footer" .}}
