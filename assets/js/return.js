@@ -8,7 +8,7 @@ const getBorrowedBooks = () => {
     
         response.data.forEach((data, index)=>{
             console.log(data)
-            tableRow += `<tr> <th scope="row">${index + 1}</th> <td>${data.title}</td>  <td>${data.author}</td>  <td>${data.quantity}</td> <td> <button data-id="${data.id}" onclick="returnBook(this);" class="btn btn-primary" type="button" ${data.quantity < 1 ? 'disabled' : ''} > Return </button></td></tr>`
+            tableRow += `<tr> <th scope="row">${index + 1}</th> <td>${data.Book.title}</td> <td>${data.BorrowedAt}</td> <td> <button data-logid="${data.id}" onclick="returnBook(this);" class="btn btn-primary" type="button" ${data.ReturnedAt ? 'disabled' : ''} > Return </button></td></tr>`
         })
         document.getElementById('books-borrowed').innerHTML = tableRow
     })
@@ -20,7 +20,7 @@ const getBorrowedBooks = () => {
 
 const returnBook = (e) => {
 
-fetchData('PATCH', API_BASE+RETURN_BOOK_URL, JSON.stringify({bookId: parseInt(e.dataset.id)}))
+fetchData('PATCH', API_BASE+RETURN_BOOK_URL, JSON.stringify({logId: parseInt(e.dataset.logid)}))
     .then((response) => {
         console.log(response)
         getBorrowedBooks()
