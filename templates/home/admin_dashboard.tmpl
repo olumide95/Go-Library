@@ -1,1 +1,24 @@
-welcome {{ .email }}
+
+{{ template "header" .}}
+ <main class="container">
+<div class="row align-items-md-stretch">
+      
+      <div class="col-md-6">
+        <div class="h-100 p-5 bg-light border rounded-3">
+        <a href="admin/add-books"> 
+           <button class="btn btn-outline-secondary" type="button">Add Book(s)</button>
+        </a>
+          
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="h-100 p-5 bg-light border rounded-3">
+        <a href="admin/view-book"> 
+          <button class="btn btn-outline-secondary" type="button">View Books</button>
+        </div>
+         </a>
+      </div>
+</div>
+ </main>
+{{ template "footer" .}}

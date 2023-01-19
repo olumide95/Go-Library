@@ -1,0 +1,29 @@
+
+{{ template "header" .}}
+ <main class="container">
+ <h4>Available Books</h4>
+ <br/>
+
+
+ <table class="table table-light" id="view-books">
+  <button class="btn btn-danger" onclick="deleteSelected()" style="float: right;">Delete Selected</button>
+    <br/>  <br/>
+  <thead>
+    <tr>
+    <th scope="col"><input class="form-check-input" type="checkbox" onclick="toggelSelectAll(this)"></th>
+      <th scope="col">#</th>
+      <th scope="col">Book Name</th>
+      <th scope="col">Author</th>
+      <th scope="col">Available Quantity</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody id="books-avaialbe">
+  
+  </tbody>
+</table>
+ </main>
+ 
+{{ template "footer" .}}
+<script src="https://code.jquery.com/jquery-3.6.3.slim.min.js" integrity="sha256-ZwqZIVdD3iXNyGHbSYdsmWP//UBokj2FHAxKuSBKDSo=" crossorigin="anonymous"></script>
+ <script src="/assets/js/view-books.js"></script>

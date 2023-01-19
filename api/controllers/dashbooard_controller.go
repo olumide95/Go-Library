@@ -30,3 +30,11 @@ func (dc *DashboardController) BorrowBook(c *gin.Context) {
 func (dc *DashboardController) ReturnBook(c *gin.Context) {
 	c.HTML(http.StatusOK, "user_return_book.tmpl", gin.H{})
 }
+
+func (dc *DashboardController) AddBooks(c *gin.Context) {
+	c.HTML(http.StatusOK, "admin_view_books.tmpl", gin.H{})
+}
+
+func (dc *DashboardController) ViewBooks(c *gin.Context) {
+	c.HTML(http.StatusOK, "admin_add_books.tmpl", gin.H{})
+}

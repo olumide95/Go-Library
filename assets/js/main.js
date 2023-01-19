@@ -2,10 +2,21 @@ const API_BASE = 'http://localhost:8080'
 const SIGNIN_URL = '/login'
 const SIGNUP_URL = '/signup'
 const ADMIN_ROLE = 'Admin'
+const USER_ROLE = 'User'
 
 
 const isLoggedIn = () => {
     return !!localStorage.getItem('access_token');
+}
+
+const isAdmin = () => {
+    const user = JSON.parse(localStorage.getItem('user'))
+    return user?.role == ADMIN_ROLE;
+}
+
+const isUser = () => {
+    const user = JSON.parse(localStorage.getItem('user'))
+    return user?.role == USER_ROLE;
 }
 
 const logOut = () => {
@@ -21,13 +32,30 @@ window.onload = (event) => {
         document.querySelectorAll('.no-auth').forEach(function(el) {
             el.style.display = 'none';
          });
-         return;
+
+        const user = JSON.parse(localStorage.getItem('user'))
+       
+        if(user.role == USER_ROLE){
+
+            document.querySelectorAll('.admin-auth').forEach(function(el) {
+                el.style.display = 'none';
+            });
+
+        }
+
+        if(user.role == ADMIN_ROLE){
+
+            document.querySelectorAll('.user-auth').forEach(function(el) {
+                el.style.display = 'none';
+            });
+
+        }
+        return;
     }
 
     document.querySelectorAll('.auth').forEach(function(el) {
         el.style.display = 'none';
      });
-    
 };
 
 document.getElementById('signin-form')?.addEventListener('submit', (e) => {
