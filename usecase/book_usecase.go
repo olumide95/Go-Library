@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"log"
 	"time"
 
 	"github.com/olumide95/go-library/domain"
@@ -20,6 +21,14 @@ func NewbookUsecase(bookRepository models.BookRepository, bookLogRepository mode
 }
 
 func (bu *bookUsecase) AllBooks() ([]models.Book, error) {
+	return bu.bookRepository.All()
+}
+
+func (bu *bookUsecase) AllBorrowedBooks(userId uint) ([]models.Book, error) {
+	bookLog, err := bu.bookLogRepository.GetIDsByUserId(userId)
+
+	log.Print(bookLog, err)
+
 	return bu.bookRepository.All()
 }
 

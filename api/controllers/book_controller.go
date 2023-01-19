@@ -24,6 +24,24 @@ func (bc *BookController) AllBooks(c *gin.Context) {
 	c.JSON(http.StatusOK, util.SuccessResponse{Message: "Books retrived Successfully!", Data: books})
 }
 
+func (bc *BookController) AllBorrowedBooks(c *gin.Context) {
+	userId, exists := c.Get("currentUserId")
+
+	if !exists {
+		c.JSON(http.StatusNotFound, util.ErrorResponse{Message: "User not Found."})
+		return
+	}
+
+	var books []models.Book
+	books, err := bc.BookUsecase.AllBorrowedBooks(userId.(uint))
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"books": util.ErrorResponse{Message: err.Error()}})
+	}
+
+	c.JSON(http.StatusOK, util.SuccessResponse{Message: "Books retrived Successfully!", Data: books})
+}
+
 func (bc *BookController) StoreBooks(c *gin.Context) {
 	var request *domain.StoreBooksRequest
 

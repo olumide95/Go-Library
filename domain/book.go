@@ -38,4 +38,5 @@ type BookUsecase interface {
 	GetBookByID(id uint) (models.Book, error)
 	Delete(id []uint) bool
 	AllBooks() ([]models.Book, error)
+	AllBorrowedBooks(userId uint) ([]models.Book, error)
 }

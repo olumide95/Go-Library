@@ -18,6 +18,7 @@ func BookRouter(r *gin.RouterGroup, DB *gorm.DB) {
 
 	r.GET("/books/all", dc.AllBooks)
 	r.POST("/books/store", dc.StoreBooks)
+	r.GET("/books/borrowed-books", dc.AllBorrowedBooks)
 
 	//Routes With DB Transaction
 	txHandle := DB.Begin()
