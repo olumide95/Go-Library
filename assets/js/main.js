@@ -3,6 +3,33 @@ const SIGNIN_URL = '/login'
 const SIGNUP_URL = '/signup'
 const ADMIN_ROLE = 'Admin'
 
+
+const isLoggedIn = () => {
+    return !!localStorage.getItem('access_token', reponse.access_token);
+}
+
+const logOut = () => {
+    localStorage.removeItem('user')
+    localStorage.removeItem('access_token')
+    location.pathname = '/'
+}
+
+window.onload = (event) => {
+    
+    const access_token = localStorage.getItem('access_token')
+    if(access_token){
+        document.querySelectorAll('.no-auth').forEach(function(el) {
+            el.style.display = 'none';
+         });
+         return;
+    }
+
+    document.querySelectorAll('.auth').forEach(function(el) {
+        el.style.display = 'none';
+     });
+    
+};
+
 document.getElementById('signin-form')?.addEventListener('submit', (e) => {
     e.preventDefault();
 
