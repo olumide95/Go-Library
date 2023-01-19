@@ -90,9 +90,21 @@ func (bu *bookUsecase) ReturnBook(logId uint, userId uint) bool {
 	return true
 }
 
-func (bu *bookUsecase) UpdateBookQuantity(id uint, quantity uint16) (int64, error) {
-	book := models.Book{Quantity: quantity}
-	return bu.bookRepository.Update(id, &book)
+func (bu *bookUsecase) UpdateBook(data *models.Book) bool {
+
+	book, err := bu.bookRepository.GetByIDForUpdate(data.ID)
+
+	if err != nil {
+		return false
+	}
+
+	result, err := bu.bookRepository.Update(book.ID, data)
+
+	if err != nil || result == 0 {
+		return false
+	}
+
+	return true
 }
 
 func (bu *bookUsecase) CreateBulk(books *[]models.Book) error {

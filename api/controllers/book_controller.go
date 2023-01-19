@@ -51,7 +51,7 @@ func (bc *BookController) StoreBooks(c *gin.Context) {
 }
 
 func (bc *BookController) UpdateBook(c *gin.Context) {
-	var request *domain.StoreBooksRequest
+	var request *domain.UpdateBookRequest
 
 	err := c.ShouldBind(&request)
 
@@ -59,7 +59,17 @@ func (bc *BookController) UpdateBook(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, util.ErrorResponse{Message: err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{})
+
+	book := models.Book{ID: request.ID, Title: request.Title, Author: request.Author, Quantity: request.Quantity}
+
+	bookUpdated := bc.BookUsecase.UpdateBook(&book)
+
+	if !bookUpdated {
+		c.JSON(http.StatusInternalServerError, util.SuccessResponse{Message: "Error Updating Book!"})
+		return
+	}
+
+	c.JSON(http.StatusOK, util.SuccessResponse{Message: "Books Updated Successfully!"})
 }
 
 func (bc *BookController) DeleteBooks(c *gin.Context) {
@@ -80,7 +90,7 @@ func (bc *BookController) DeleteBooks(c *gin.Context) {
 	booksDeleted := bc.BookUsecase.Delete(IDs)
 
 	if !booksDeleted {
-		c.JSON(http.StatusNotFound, util.ErrorResponse{Message: "Error Deleting Books."})
+		c.JSON(http.StatusInternalServerError, util.ErrorResponse{Message: "Error Deleting Books."})
 		return
 	}
 
@@ -107,7 +117,7 @@ func (bc *BookController) BorrowBook(c *gin.Context) {
 	bookBorrowed := bc.BookUsecase.BorrowBook(request.BookID, userId.(uint))
 
 	if !bookBorrowed {
-		c.JSON(http.StatusNotFound, util.ErrorResponse{Message: "Error Borrowing Book."})
+		c.JSON(http.StatusInternalServerError, util.ErrorResponse{Message: "Error Borrowing Book."})
 		return
 	}
 
@@ -134,7 +144,7 @@ func (bc *BookController) ReturnBook(c *gin.Context) {
 	bookReturned := bc.BookUsecase.ReturnBook(request.LogID, userId.(uint))
 
 	if !bookReturned {
-		c.JSON(http.StatusNotFound, util.ErrorResponse{Message: "Error Returning Book."})
+		c.JSON(http.StatusInternalServerError, util.ErrorResponse{Message: "Error Returning Book."})
 		return
 	}
 
