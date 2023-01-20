@@ -2,11 +2,11 @@ const ALL_BOOKS_URL = '/books/all'
 const DELETE_BOOK_URL = '/books/delete'
 const UPDATE_BOOK_URL = '/books/update'
 
+if(!isLoggedIn() || !isAdmin()){
+    location.pathname = '/login'
+}
+
 const getAvailableBooks = () => {
-    if(!isLoggedIn() && isAdmin()){
-        location.pathname = '/login'
-        return
-    }
 
     fetchData('GET', API_BASE+ALL_BOOKS_URL)
     .then((response) => {

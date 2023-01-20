@@ -1,5 +1,8 @@
 const STORE_BOOK_URL = '/books/store'
 
+if(!isLoggedIn() || !isAdmin()){
+    location.pathname = '/login'
+}
 
 const addRow = () => {
     const rowId = 'row' + Date.now()
