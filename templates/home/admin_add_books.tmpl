@@ -1,0 +1,41 @@
+
+{{ template "header" .}}
+ <main class="container">
+ <h4>Add Book(s)</h4>
+ <br/>
+
+<form id="add-books-form">
+
+<div class="row" id="book-row">
+  <div class="row pb-2">
+    <div class="col-4">
+      <div class="form-group">
+        <input type="text" class="form-control" name="title" value="" placeholder="Tile">
+      </div>
+    </div>
+
+    <div class="col-3">
+      <div class="form-group">
+        <input type="text" class="form-control" name="author" value="" placeholder="Author">
+      </div>
+    </div>
+
+    <div class="col-3">
+      <div class="form-group">
+        <input type="number" class="form-control" name="quantity" value="" placeholder="Quantity">
+      </div>
+    </div> 
+
+    <div class="col-1">
+      <button class="btn btn-success" type="button"  onclick="addRow();"> + </button>
+    </div> 
+  </div> 
+</div>
+<br/>
+<button class="btn btn-md btn-primary" type="submit">Add Book(s)</button>
+</form>
+
+</main>
+ 
+{{ template "footer" .}}
+<script src="/assets/js/add-books.js"></script>

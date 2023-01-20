@@ -32,9 +32,9 @@ func (dc *DashboardController) ReturnBook(c *gin.Context) {
 }
 
 func (dc *DashboardController) AddBooks(c *gin.Context) {
-	c.HTML(http.StatusOK, "admin_view_books.tmpl", gin.H{})
+	c.HTML(http.StatusOK, "admin_add_books.tmpl", gin.H{})
 }
 
 func (dc *DashboardController) ViewBooks(c *gin.Context) {
-	c.HTML(http.StatusOK, "admin_add_books.tmpl", gin.H{})
+	c.HTML(http.StatusOK, "admin_view_books.tmpl", gin.H{})
 }
