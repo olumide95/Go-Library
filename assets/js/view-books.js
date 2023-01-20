@@ -1,5 +1,6 @@
 const ALL_BOOKS_URL = '/books/all'
 const DELETE_BOOK_URL = '/books/delete'
+const UPDATE_BOOK_URL = '/books/update'
 
 const getAvailableBooks = () => {
     if(!isLoggedIn() && isAdmin()){
@@ -12,7 +13,7 @@ const getAvailableBooks = () => {
         let tableRow = '';
     
         response.data.forEach((data, index)=>{
-            tableRow += `<tr> <th scope="row"> <input class="form-check-input books-check" type="checkbox" data-id="${data.id}"> </th> <td>${index + 1}</td> <td>${data.title}</td>  <td>${data.author}</td>  <td>${data.quantity}</td> <td> <a href="/admin/books/update/${data.id}"> <button data-id="${data.id}" class="btn btn-primary" type="button"> Update </button> </a></td></tr>`
+            tableRow += `<tr> <th scope="row"> <input class="form-check-input books-check" type="checkbox" data-id="${data.id}"> </th> <td>${index + 1}</td> <td>${data.title}</td>  <td>${data.author}</td>  <td> <button data-id="${data.id}" data-quantity="${data.quantity}" onClick="decrementQuantity(this)" class="btn btn-danger btn-sm" type="button"> - </button> ${data.quantity} <button data-id="${data.id}" data-quantity="${data.quantity}" onClick="incrementQuantity(this)" class="btn btn-primary btn-sm" type="button"> + </button> </td> <td> <a href="/admin/books/update/${data.id}"> <button data-id="${data.id}" class="btn btn-primary" type="button"> Update </button> </a></td></tr>`
         })
         document.getElementById('books-avaialbe').innerHTML = tableRow
     })
@@ -20,6 +21,33 @@ const getAvailableBooks = () => {
         response.json().then((r) => { alert(r.message) })
     });
 
+}
+
+const incrementQuantity = (e) => {
+    const quantity = parseInt(e.dataset.quantity) + 1
+    const id = parseInt(e.dataset.id)
+
+    const data = {bookId: id, quantity: quantity }
+    console.log(data)
+    updateBook(data)
+}
+
+const decrementQuantity = (e) => {
+    const quantity = parseInt(e.dataset.quantity) - 1
+    const id = parseInt(e.dataset.id)
+
+    const data = {bookId: id, quantity: quantity }
+    updateBook(data)
+}
+
+const updateBook = (data) => {
+    fetchData('PATCH', API_BASE+UPDATE_BOOK_URL, JSON.stringify(data))
+    .then((response) => {
+        getAvailableBooks()
+    })
+    .catch((response) => {
+        response.json().then((r) => { alert(r.message) })
+    });
 }
 
 const deleteSelected = () => {
