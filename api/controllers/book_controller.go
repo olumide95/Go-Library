@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -66,7 +65,6 @@ func (bc *BookController) UpdateBook(c *gin.Context) {
 	var request *domain.UpdateBookRequest
 
 	err := c.ShouldBind(&request)
-	log.Println(request.BookID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, util.ErrorResponse{Message: err.Error()})
 		return
