@@ -50,7 +50,6 @@ func (bu *bookUsecase) BorrowBook(id uint, userId uint) bool {
 	book.Quantity -= 1
 	result, err := bu.bookRepository.Update(id, &book)
 
-	log.Println(book.Quantity)
 	if err != nil || result == 0 {
 		log.Println("Error Updating book with id: "+strconv.FormatUint(uint64(id), 10), err)
 		return false
