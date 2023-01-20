@@ -39,7 +39,7 @@ func (br *bookRepository) Update(id uint, book *models.Book) (int64, error) {
 
 func (br *bookRepository) GetByIds(ids []uint) ([]models.Book, error) {
 	var book []models.Book
-	result := br.database.Find(&book, "id IN ?", ids)
+	result := br.database.Order("id").Find(&book, "id IN ?", ids)
 
 	return book, result.Error
 }
@@ -67,7 +67,7 @@ func (br *bookRepository) Delete(id []uint) (int64, error) {
 
 func (br *bookRepository) All() ([]models.Book, error) {
 	var books []models.Book
-	result := br.database.Find(&books)
+	result := br.database.Order("id").Find(&books)
 
 	return books, result.Error
 }
