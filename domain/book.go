@@ -12,7 +12,7 @@ type StoreBooksRequest []struct {
 }
 
 type UpdateBookRequest struct {
-	ID       uint   `form:"bookId" binding:"required"`
+	BookID   uint   `form:"bookId" binding:"required"`
 	Title    string `form:"title"`
 	Author   string `form:"author"`
 	Quantity uint16 `form:"quantity"`

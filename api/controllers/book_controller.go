@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -65,13 +66,13 @@ func (bc *BookController) UpdateBook(c *gin.Context) {
 	var request *domain.UpdateBookRequest
 
 	err := c.ShouldBind(&request)
-
+	log.Println(request.BookID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, util.ErrorResponse{Message: err.Error()})
 		return
 	}
 
-	book := models.Book{ID: request.ID, Title: request.Title, Author: request.Author, Quantity: request.Quantity}
+	book := models.Book{ID: request.BookID, Title: request.Title, Author: request.Author, Quantity: request.Quantity}
 
 	txHandle := c.MustGet("db_trx").(*gorm.DB)
 
