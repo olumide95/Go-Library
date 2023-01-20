@@ -12,10 +12,10 @@ type StoreBooksRequest []struct {
 }
 
 type UpdateBookRequest struct {
-	BookID   uint   `form:"bookId" binding:"required"`
-	Title    string `form:"title"`
-	Author   string `form:"author"`
-	Quantity uint16 `form:"quantity"`
+	BookID   uint    `form:"bookId" binding:"required"`
+	Title    string  `form:"title" binding:"required"`
+	Author   string  `form:"author" binding:"required"`
+	Quantity *uint16 `form:"quantity" binding:"required"`
 }
 
 type BorrowBookRequest struct {

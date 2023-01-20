@@ -70,7 +70,7 @@ func (bc *BookController) UpdateBook(c *gin.Context) {
 		return
 	}
 
-	book := models.Book{ID: request.BookID, Title: request.Title, Author: request.Author, Quantity: request.Quantity}
+	book := models.Book{ID: request.BookID, Title: request.Title, Author: request.Author, Quantity: *request.Quantity}
 
 	txHandle := c.MustGet("db_trx").(*gorm.DB)
 
