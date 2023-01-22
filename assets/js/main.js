@@ -4,7 +4,6 @@ const SIGNUP_URL = '/signup'
 const ADMIN_ROLE = 'Admin'
 const USER_ROLE = 'User'
 
-
 const isLoggedIn = () => {
     return !!localStorage.getItem('access_token');
 }
@@ -117,9 +116,16 @@ const fetchData = (method, url, data) => {
             'Content-Type': 'application/json'},
         body: data
       }).then((response) => {
+        
         if (response.ok) {
           return response.json();
         }
+
+        if (response.status == 401) {
+            location.pathname = 'login'
+            return
+        }
+
         return Promise.reject(response);
       })
 }
