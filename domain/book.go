@@ -18,6 +18,10 @@ type UpdateBookRequest struct {
 	Quantity *uint16 `form:"quantity" binding:"required"`
 }
 
+type GetBookRequest struct {
+	BookID uint `form:"bookId" binding:"required"`
+}
+
 type BorrowBookRequest struct {
 	BookID uint `form:"bookId" binding:"required"`
 }

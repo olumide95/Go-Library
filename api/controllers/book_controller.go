@@ -14,9 +14,28 @@ type BookController struct {
 	BookUsecase domain.BookUsecase
 }
 
+func (bc *BookController) GetBook(c *gin.Context) {
+	var request *domain.GetBookRequest
+
+	err := c.ShouldBind(&request)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, util.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	book, err := bc.BookUsecase.GetBookByID(request.BookID)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, util.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, util.SuccessResponse{Message: "Books retrived Successfully!", Data: book})
+}
+
 func (bc *BookController) AllBooks(c *gin.Context) {
-	var books []models.Book
-	books, _ = bc.BookUsecase.AllBooks()
+	books, _ := bc.BookUsecase.AllBooks()
 
 	c.JSON(http.StatusOK, util.SuccessResponse{Message: "Books retrived Successfully!", Data: books})
 }

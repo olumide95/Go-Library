@@ -38,3 +38,7 @@ func (dc *DashboardController) AddBooks(c *gin.Context) {
 func (dc *DashboardController) ViewBooks(c *gin.Context) {
 	c.HTML(http.StatusOK, "admin_view_books.tmpl", gin.H{})
 }
+
+func (dc *DashboardController) UpdateBook(c *gin.Context) {
+	c.HTML(http.StatusOK, "admin_update_book.tmpl", gin.H{})
+}
