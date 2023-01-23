@@ -30,4 +30,13 @@ var _ = Describe("Repository", func() {
 		Ω(books).To(HaveLen(1))
 		Ω(books[0].Title).To(Equal("Test Title 1"))
 	})
+
+	It("deletes a book record", func() {
+		book := models.Book{Title: "Test Title 1", Author: "Test Author", Quantity: 2}
+		repo.Create(&book)
+
+		l, err := repo.Delete([]uint{1})
+		Ω(err).To(Succeed())
+		Ω(l).To(BeEquivalentTo(1))
+	})
 })
