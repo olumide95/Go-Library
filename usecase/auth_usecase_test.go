@@ -19,24 +19,34 @@ var _ = Describe("AuthUsecase", func() {
 
 		err := Db.AutoMigrate(&models.User{})
 		Ω(err).To(Succeed())
-
 	})
 
 	Context("#Create", func() {
 
 		It("Creates a user record in the DB", func() {
-			user := models.User{Name: "Test", Email: "test@email.com", Role: "User", Password: "password"}
+			user := models.User{Name: "Test", Email: "test1@email.com", Role: "User", Password: "password"}
 			err := au.CreateUser(&user)
 			Ω(err).To(Succeed())
 		})
 
 		It("does not create a user record in the DB when there is an existing user with the same email", func() {
-			user1 := models.User{Name: "Test", Email: "test@email.com", Role: "User", Password: "password"}
-			au.CreateUser(&user1)
+			user1 := models.User{Name: "Test", Email: "test2@email.com", Role: "User", Password: "password"}
+			err := au.CreateUser(&user1)
+			Ω(err).To(Succeed())
 
-			user2 := models.User{Name: "Test", Email: "test@email.com", Role: "User", Password: "password"}
-			err := au.CreateUser(&user2)
+			user2 := models.User{Name: "Test", Email: "test2@email.com", Role: "User", Password: "password"}
+			err = au.CreateUser(&user2)
 			Ω(err).NotTo(Succeed())
+		})
+
+		It("creates a user record in the DB when there is an existing user with a different email", func() {
+			user1 := models.User{Name: "Test", Email: "test3@email.com", Role: "User", Password: "password"}
+			err := au.CreateUser(&user1)
+			Ω(err).To(Succeed())
+
+			user2 := models.User{Name: "Test", Email: "test4@email.com", Role: "User", Password: "password"}
+			err = au.CreateUser(&user2)
+			Ω(err).To(Succeed())
 		})
 	})
 
