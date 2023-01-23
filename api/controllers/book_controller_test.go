@@ -42,13 +42,29 @@ var _ = Describe("/book/store", func() {
 
 			It("Returns a status 201", func() {
 
-				data := `[{ "title": "Book 1", 	"author: "Author 1", quantity: 1 }]`
+				data := `[{"title": "Book 1", "author": "Author 1", "quantity" : 1 }]`
 
 				req, _ := http.NewRequest("POST", "/books/store", strings.NewReader(data))
+				req.Header.Set("Content-Type", "application/json")
 				resp := httptest.NewRecorder()
 				server.ServeHTTP(resp, req)
 
 				Expect(resp.Code).Should(Equal(http.StatusCreated))
+			})
+		})
+
+		Context("When an incorrect payload is sent", func() {
+
+			It("Returns a status 400", func() {
+
+				data := `[{"title": "Book 1", "author": "Author 1", "quantity" : "1" }]`
+
+				req, _ := http.NewRequest("POST", "/books/store", strings.NewReader(data))
+				req.Header.Set("Content-Type", "application/json")
+				resp := httptest.NewRecorder()
+				server.ServeHTTP(resp, req)
+
+				Expect(resp.Code).Should(Equal(http.StatusBadRequest))
 			})
 		})
 
@@ -64,32 +80,6 @@ var _ = Describe("/book/store", func() {
 	// 		resp.Body.Close()
 	// 		Expect(err).ShouldNot(HaveOccurred())
 	// 		Expect(string(body)).To(Equal(msg + "hello!"))
-	// 	})
-	// })
-
-	// Context("When get request is sent to read path but there is no file", func() {
-
-	// 	It("Returns internal server error", func() {
-	// 		resp, err := http.Get(server.URL() + "/read")
-	// 		Expect(err).ShouldNot(HaveOccurred())
-	// 		Expect(resp.StatusCode).Should(Equal(http.StatusInternalServerError))
-	// 		body, err := ioutil.ReadAll(resp.Body)
-	// 		resp.Body.Close()
-	// 		Expect(err).ShouldNot(HaveOccurred())
-	// 		Expect(string(body)).To(Equal("open data.txt: no such file or directory\n"))
-	// 	})
-	// })
-
-	// Context("When get request is sent to read path but file exists", func() {
-
-	// 	It("Reads data from file successfully", func() {
-	// 		resp, err := http.Get(server.URL() + "/read")
-	// 		Expect(err).ShouldNot(HaveOccurred())
-	// 		Expect(resp.StatusCode).Should(Equal(http.StatusOK))
-	// 		body, err := ioutil.ReadAll(resp.Body)
-	// 		resp.Body.Close()
-	// 		Expect(err).ShouldNot(HaveOccurred())
-	// 		Expect(string(body)).To(Equal("Content in file is...\r\nHi there!"))
 	// 	})
 	// })
 })
