@@ -77,7 +77,7 @@ func (bc *BookController) StoreBooks(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, util.SuccessResponse{Message: "Books Created Successfully!"})
+	c.JSON(http.StatusCreated, util.SuccessResponse{Message: "Books Created Successfully!"})
 }
 
 func (bc *BookController) UpdateBook(c *gin.Context) {

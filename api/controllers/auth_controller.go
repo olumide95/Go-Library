@@ -67,7 +67,7 @@ func (ac *AuthController) Signup(c *gin.Context) {
 	c.SetCookie("access_token", access_token, 86400, "/", "localhost", false, true)
 	c.SetCookie("logged_in", "true", 86400, "/", "localhost", false, false)
 
-	c.JSON(http.StatusOK, gin.H{"user": userResponse, "access_token": access_token})
+	c.JSON(http.StatusCreated, gin.H{"user": userResponse, "access_token": access_token})
 }
 
 func (ac *AuthController) Login(c *gin.Context) {
