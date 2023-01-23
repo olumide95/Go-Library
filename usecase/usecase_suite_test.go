@@ -1,4 +1,4 @@
-package repository_test
+package usecase_test
 
 import (
 	"testing"
@@ -11,7 +11,7 @@ import (
 
 func TestRepository(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Repository Suite")
+	RunSpecs(t, "Usecase Suite")
 }
 
 var Db *gorm.DB

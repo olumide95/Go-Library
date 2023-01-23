@@ -1,4 +1,4 @@
-package repository_test
+package controller_test
 
 import (
 	"testing"
@@ -11,7 +11,7 @@ import (
 
 func TestRepository(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Repository Suite")
+	RunSpecs(t, "Contoller Suite")
 }
 
 var Db *gorm.DB
