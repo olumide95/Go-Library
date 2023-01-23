@@ -12,25 +12,25 @@ import (
 func BookRouter(r *gin.RouterGroup, DB *gorm.DB) {
 	br := repository.NewBookRepository(DB)
 	blr := repository.NewBookLogRepository(DB)
-	dc := controller.BookController{
+	bc := controller.BookController{
 		BookUsecase: usecase.NewbookUsecase(br, blr),
 	}
 
-	r.GET("/books/all", dc.AllBooks)
-	r.POST("/books/store", dc.StoreBooks)
-	r.GET("/books/borrowed-books", dc.AllBorrowedBooks)
-	r.GET("/books/get-book", dc.GetBook)
+	r.GET("/books/all", bc.AllBooks)
+	r.POST("/books/store", bc.StoreBooks)
+	r.GET("/books/borrowed-books", bc.AllBorrowedBooks)
+	r.GET("/books/get-book", bc.GetBook)
 }
 
 func BookRouterWithTx(r *gin.RouterGroup, DB *gorm.DB) {
 	br := repository.NewBookRepository(DB)
 	blr := repository.NewBookLogRepository(DB)
-	dc := controller.BookController{
+	bc := controller.BookController{
 		BookUsecase: usecase.NewbookUsecase(br, blr),
 	}
 	//Routes With DB Transaction
-	r.PATCH("/books/update", middleware.DBTransactionMiddleware(DB), dc.UpdateBook)
-	r.PATCH("/books/borrow", middleware.DBTransactionMiddleware(DB), dc.BorrowBook)
-	r.DELETE("/books/delete", middleware.DBTransactionMiddleware(DB), dc.DeleteBooks)
-	r.PATCH("/books/return", middleware.DBTransactionMiddleware(DB), dc.ReturnBook)
+	r.PATCH("/books/update", middleware.DBTransactionMiddleware(DB), bc.UpdateBook)
+	r.PATCH("/books/borrow", middleware.DBTransactionMiddleware(DB), bc.BorrowBook)
+	r.DELETE("/books/delete", middleware.DBTransactionMiddleware(DB), bc.DeleteBooks)
+	r.PATCH("/books/return", middleware.DBTransactionMiddleware(DB), bc.ReturnBook)
 }
